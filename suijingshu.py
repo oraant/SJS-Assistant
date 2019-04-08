@@ -48,7 +48,8 @@ def choice_node():
 # 让客户输入倒计时多久，默认三十分钟
 def choice_time():
     while 1:  # 暂时还不用加锁，因为快捷键线程还没起
-        response = input("\n请设置多少分钟后使用此卡片(默认为30分钟)：\n")
+        remind("\n请设置多少分钟后使用此卡片(默认为30分钟)：\n")
+        response = input()
         if response == "" : common.seconds = 1800; break
         try:
             common.seconds = common.str2seconds(response)
