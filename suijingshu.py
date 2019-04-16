@@ -11,6 +11,7 @@ words = configure.WordsConfiguration()
 shortcuts = hotkeys.Hotkey()
 node = ''
 
+
 # ------ 用户输入 -------------------------------------------------------------------------
 
 # 用户选择节点，或者自己编写新节点，最后将值存放到Node中
@@ -21,7 +22,7 @@ def choice_node():
         tmp_nodes = nodes.pick_items()
 
         # 展示当前的选项
-        remind("\n当前抽取的卡片如下，请用数字选择卡片，回车重新抽取卡片，其他选项请打字输入：")
+        print("当前抽取的卡片如下，请用数字选择卡片，回车重新抽取卡片，其他选项请打字输入：")
         for i, v in enumerate(tmp_nodes):
             print("%d - %s" % (i + 1, str(v)))
 
@@ -40,9 +41,9 @@ def choice_node():
     # 保存用户的选择
     if nodes.search_item(node):
         nodes.add_weight(node)
-        remind("节点%s的权重已更改为%d" % (node, nodes.get_weight(node)))
+        print("节点%s的权重已更改为%d" % (node, nodes.get_weight(node)))
     else:
-        remind("自定义节点，无法设置权重")
+        print("自定义节点，无法设置权重")
 
 
 # 让客户输入倒计时多久，默认三十分钟
@@ -56,7 +57,7 @@ def choice_time():
             break
         except:
             continue
-    remind("您将时间设置为%s后\n" % common.seconds2str(common.seconds))
+    print("您将时间设置为%s后\n" % common.seconds2str(common.seconds))
 
 
 # ------ 计时提醒 -------------------------------------------------------------------------
@@ -125,15 +126,14 @@ def countdown():
         common.seconds_sem.acquire()
     common.seconds_sem.release()
 
+
 # ------ 正式执行 -------------------------------------------------------------------------
 
-
-#
-remind("衍主好呀，我们又见面啦。")
-
 # 用户输入
+remind("主人好呀，想让静姝提醒您什么呢？")
 choice_node()
 choice_time()
+remind("好的主人，%s后您要%s是吧，静姝认真的记下了哦" % (common.seconds2str(common.seconds), node))
 
 # 注册热键
 shortcuts.setDaemon(True)

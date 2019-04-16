@@ -65,17 +65,20 @@ def play_mp3():
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
         fp.write(res)
         fp.close()
-        playsound(fp.name)
+        playsound(fp.name, block=False)
         os.remove(fp.name)
+
+def get_and_play():
+    get_token()
+    get_mp3()
+    play_mp3()
+
 
 # 对外的说话接口
 def speak(x):
     global words
     words = x
     try:
-        get_token()
-        get_mp3()
-        play_mp3()
+        get_and_play()
     except:
-        print("阿里云语音合成失败，将切换为Windows自带声音")
         win_speak(x)
