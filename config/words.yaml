@@ -1,7 +1,7 @@
-'衍主在上：距离{node}还有{time}哦':
+'主人在上：距离{node}还有{time}哦':
   count : 0
   active : True
-'{node}这种事，衍主真的喜欢吗，再等{time}吧':
+'{node}这种事，主人真的喜欢吗，再等{time}吧':
   count : 0
   active : True
 '想{node}吗？再等{time}就可以啦':
@@ -13,7 +13,22 @@
 '{node}喽，可惜还得再等{time}哦，小姝也想试试呢':
   count : 0
   active : True
-'衍主衍主，偷偷告诉你，还有{time}，就可以{node}啦':
+'主人主人，偷偷告诉你，还有{time}，就可以{node}啦':
+  count : 0
+  active : True
+'好期待哦，还有{time}，就可以{node}啦':
+  count : 0
+  active : True
+'好开心啊，还有{time}，就可以{node}啦':
+  count : 0
+  active : True
+'还有{time}，就要{node}啦，主人等不及了吗':
+  count : 0
+  active : True
+'还有{time}，就可以{node}啦，主人开心吗':
+  count : 0
+  active : True
+'您喜欢{node}吗？还有{time}哦':
   count : 0
   active : True
 '当当当，还有{time}，就可以{node}啦，开心吗':
@@ -28,6 +43,18 @@
 '随静姝又来啦，还有{time}，就可以{node}喽':
   count : 0
   active : True
-'{time}，就要{node}了哦':
+'再等{time}，就要{node}了哦':
   count : 0
   active : True
+'{time}后，主人就要{node}了呢，静姝舍不得您走呀':
+  count : 0
+  active : True
+'主人您已经决定{node}了吗，只剩{time}了呢':
+  count : 0
+  active : True
+'主人？主人？您在听吗？离{node}了还有{time}哦':
+  count: 5
+  active: True
+'主人！主人！离{node}了还有{time}哦！':
+  count: 5
+  active: True

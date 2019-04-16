@@ -63,7 +63,7 @@
   count: 0
 叠一只纸飞机:
   active: true
-  count: 1
+  count: 0
 叠一只纸鹤:
   active: true
   count: 0
@@ -87,7 +87,7 @@
   count: 0
 吃块冰糕:
   active: true
-  count: 0
+  count: 1
 吃块巧克力:
   active: true
   count: 0
@@ -399,7 +399,7 @@
   count: 0
 读一读人类简史:
   active: true
-  count: 0
+  count: 2
 读一读英文诗:
   active: true
   count: 0
@@ -408,7 +408,7 @@
   count: 0
 读一读资本论:
   active: true
-  count: 0
+  count: 2
 读一读顾城诗集:
   active: true
   count: 0
