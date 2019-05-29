@@ -2,8 +2,8 @@ from ruamel.yaml import YAML
 from bin import common
 from random import sample
 
-config = []  # todo: 写成一个类，其他的用来继承
 
+# 基础的配置类，用于读取、存储、改变相关配置
 class Configuration:
 
     def __init__(self, filename):
@@ -34,6 +34,10 @@ class Configuration:
         else:
             return False
 
+
+# 针对列表的配置类，提供了开关、权重、随机抽取等功能
+class ListConfiguration(Configuration):
+
     # 从配置表中，按照一定规则，随机抽取一部分内容
     def pick_items(self, samples=3, weight=True, switch=True):
 
@@ -54,12 +58,6 @@ class Configuration:
         return sample(temp, samples)
 
 
-    # 改变某项变量的值，并保存至文件
-    def change_item(self, item, key, value):
-        self.configuration[item][key] = value
-        self.save_config()
-
-
     # 改变某一项的权重，并保存至文件
     def get_weight(self, item):
         return self.configuration[item]["count"]
@@ -76,7 +74,6 @@ class Configuration:
     def cut_weight(self, item, change=1):
         current_count = self.configuration[item]["count"]
         self.set_weight(item, current_count-change)
-
 
 
     # 改变某一项的激活，并保存至文件（若已相同，则不再改变）
@@ -103,14 +100,15 @@ class Configuration:
         self.set_switch(item, True)
 
 
-
-class NodesConfiguration(Configuration):
+# 针对引力炸弹列表的配置类
+class NodesConfiguration(ListConfiguration):
 
     def __init__(self):
         common.log(10, common.nodes_file)
         super().__init__(common.nodes_file)
 
-class WordsConfiguration(Configuration):
+# 针对报时列表的配置类
+class WordsConfiguration(ListConfiguration):
 
     def __init__(self):
         common.log(10, common.words_file)
