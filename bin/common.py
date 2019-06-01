@@ -4,15 +4,7 @@ import os
 
 # 存放公共全局变量，可以让所有线程、所有模块、所有类，共同编辑同一个变量资源
 
-# 记录一下都装哪些插件
-# pip install aliyun-python-sdk-core
-# pip install ruamel.yaml
-# pip install pypiwin32
-# pip install playsound
-# pip install requests
-
-# ------ 倒计时用 -------------------------------------------------------------------------
-# 设置语音相关参数
+# ------ 语音参数 -------------------------------------------------------------------------
 url = 'https://nls-gateway.cn-shanghai.aliyuncs.com/stream/v1/tts'
 voice = 'siyue'
 appkey = 'isoImgAr3zR2V4Lq'
@@ -28,9 +20,13 @@ seconds_sem = threading.BoundedSemaphore(1)
 project_name = "SJS-Assistant"
 cur_path = os.path.abspath(os.path.dirname(__file__))
 root_path = cur_path[:cur_path.find(project_name)+len(project_name)]
+
 def file_path(x): return os.path.join(root_path, x)
-nodes_file = file_path('config\\nodes.yaml')
+bombs_file = file_path('config\\bombs.yaml')
 words_file = file_path('config\\words.yaml')
+targets_file = file_path('config\\targets.yaml')
+sentences_file = file_path('config\\sentences.yaml')
+logs_file = file_path('log\\debug.log')
 
 # ------ 时间工具 -------------------------------------------------------------------------
 
@@ -56,14 +52,18 @@ def str2seconds(string):
 
 # 将1200秒转换为20分钟
 def seconds2str(number):
-    if number > 3600:
+    if number >= 3600:
         return "%.1f" % (number/3600) + "小时"
-    elif number > 60:
+    elif number >= 60:
         return "%.1f" % (number/60) + "分钟"
     elif number >= 0:
         return "%.1f" % (number) + "秒"
     else:
         raise ValueError
+
+def str2str(string):
+    seconds = str2seconds(string)
+    return seconds2str(seconds)
 
 # ------ 日志工具 -------------------------------------------------------------------------
 def log(level, msg):
