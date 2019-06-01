@@ -126,7 +126,7 @@
   count: 0
 听一段相声:
   active: true
-  count: 0
+  count: 1
 品杯咖啡:
   active: true
   count: 0
@@ -150,7 +150,7 @@
   count: 0
 大字躺:
   active: true
-  count: 0
+  count: 1
 大脑放空:
   active: true
   count: 0
@@ -186,7 +186,7 @@
   count: 0
 学一句长难句:
   active: true
-  count: 0
+  count: 1
 学一学政治军事:
   active: true
   count: 0
@@ -228,7 +228,7 @@
   count: 0
 学点英语:
   active: true
-  count: 0
+  count: 1
 完善下采访视频:
   active: true
   count: 0
@@ -294,7 +294,7 @@
   count: 0
 散散步:
   active: true
-  count: 0
+  count: 1
 早睡:
   active: true
   count: 0
@@ -303,7 +303,7 @@
   count: 0
 炫酷的投掷一会飞镖:
   active: true
-  count: 0
+  count: 1
 猜一个灯谜:
   active: true
   count: 0
@@ -423,7 +423,7 @@
   count: 0
 跑跑步:
   active: true
-  count: 1
+  count: 2
 释放一个OW技能:
   active: true
   count: 0

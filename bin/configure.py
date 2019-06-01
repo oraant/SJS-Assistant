@@ -2,9 +2,10 @@ from ruamel.yaml import YAML
 from bin import common
 from random import sample
 
+# 重要！本模块下所有的类，所有有关获取配置的函数，都会自动读取最新的配置文件
 
 # 基础的配置类，用于读取、存储、改变相关配置
-class Configuration:
+class Configuration():
 
     def __init__(self, filename):
         self.filename = filename # 需要在这里指定子类的文件路径
@@ -13,22 +14,33 @@ class Configuration:
 
         common.log(10, self.filename)
         self.configuration = {}
-        self.load_config()
+        self.load_config()  # todo: 直接在init里加载，是否合适？
 
 
-    # 将配置从文件中读取到变量里
+    # 在实例的变量中存、取配置文件
     def load_config(self):
         with open(self.filename, encoding='utf-8') as f:
             self.configuration = self.yaml.load(f)
             common.log(10, self.configuration)
 
-    # 将配置从变量中写入到配置文件
     def save_config(self):
         with open(self.filename, 'w', encoding='utf-8') as f:
             self.yaml.dump(self.configuration, f)
 
-    # 查找配置表中有无这一项
+
+    # 返回给别人当前配置，或接收并保存配置文件
+    def get_config(self):
+        self.load_config()
+        return self.configuration
+
+    def set_config(self, config):
+        self.configuration = config
+        self.save_config()
+
+
+    # 查找配置表中有无某一项
     def search_item(self, item):
+        self.load_config()
         if item in self.configuration.keys():
             return True
         else:
@@ -36,10 +48,13 @@ class Configuration:
 
 
 # 针对列表的配置类，提供了开关、权重、随机抽取等功能
-class ListConfiguration(Configuration):
+class WeightList(Configuration):
+
+    pick = ""
 
     # 从配置表中，按照一定规则，随机抽取一部分内容
-    def pick_items(self, samples=3, weight=True, switch=True):
+    def pick_item(self, samples=1, weight=True, switch=True):
+        self.load_config()
 
         temp = []
 
@@ -57,9 +72,15 @@ class ListConfiguration(Configuration):
         common.log(10, temp)
         return sample(temp, samples)
 
+    def repeat_pick(self):
+        if self.pick:
+            return self.pick
+        else:
+            return "刚刚没有选则炸弹，如何重复呢"
 
     # 改变某一项的权重，并保存至文件
     def get_weight(self, item):
+        self.load_config()
         return self.configuration[item]["count"]
 
     def set_weight(self, item, value):
@@ -78,6 +99,7 @@ class ListConfiguration(Configuration):
 
     # 改变某一项的激活，并保存至文件（若已相同，则不再改变）
     def get_switch(self, item):
+        self.load_config()
         return self.configuration[item]["active"]
 
     def toggle_switch(self, item):
@@ -100,16 +122,109 @@ class ListConfiguration(Configuration):
         self.set_switch(item, True)
 
 
+# 针对语音的配置类
+class Sentence(Configuration):
+
+    sentence = ""
+
+    # 从配置中递归解析语句串
+    def parse_config(self, config):
+        if type(config) is str:
+            return config
+
+        if type(config) is list:
+            pickup = sample(config, 1)[0]
+            return pickup
+
+        pattern_dict = {}
+        for key in config.keys():
+            if key == "meta": continue
+            pattern_dict[key] = self.parse_config(config[key])
+
+        pattern = sample(config["meta"], 1)[0]
+        return pattern.format(**pattern_dict)
+
+    # 每次都会尝试重新读取配置文件，避免改个配置还要重启程序
+    def get_sentence(self, item_name):
+        self.load_config()
+
+        if self.search_item(item_name):
+            item = self.configuration[item_name]
+        else:
+            return "配置读取错误，找不到‘%s’语句" % (item_name)
+
+        self.sentence = self.parse_config(item)
+        self.sentence = self.sentence.replace("<", "{")
+        self.sentence = self.sentence.replace(">", "}")
+        return self.sentence
+
+    def repeat_sentence(self):
+        if self.sentence:
+            return self.sentence
+        else:
+            return "静姝刚才没有说话，为什么要重复呢？"
+
+
+
+# 针对表达的配置类
+# todo: 未来可能会把sentence、expression两个类，换成一个类，且分成“递归随机挑选”、“递归向上替换”两部分。
+#  先把不确定的确定下来，然后直接传递一整个？？
+#  这样以后的表达会更灵活、语言会更加顺畅
+class Expression(Configuration):
+
+    package = {}
+
+    def get_package(self, item_name):
+        self.load_config()
+
+        if self.search_item(item_name):
+            item = self.configuration[item_name]
+        else:
+            return "配置读取错误，找不到‘%s’表达" % (item_name)
+
+        for key in item.keys():
+            if key.startswith("<") and key.endswith(">"):
+                if type(item[key]) is list:
+                    self.package[key.strip("<>")] = sample(item[key], 1)[0]
+                elif type(item[key]) is str:
+                    self.package[key.strip("<>")] = item[key]
+
+        return self.package
+
+    def repeat_package(self):
+        if self.package:
+            return self.package
+        else:
+            return "静姝刚才没有选择组合，为什么要重复呢？"
+
+
+# ------------------------------------------------------------------------------------------------------------------
+
+
 # 针对引力炸弹列表的配置类
-class NodesConfiguration(ListConfiguration):
+class Bombs(WeightList, Expression):
 
     def __init__(self):
-        common.log(10, common.nodes_file)
-        super().__init__(common.nodes_file)
+        common.log(10, common.bombs_file)
+        super().__init__(common.bombs_file)
 
 # 针对报时列表的配置类
-class WordsConfiguration(ListConfiguration):
+class Words(WeightList):
 
     def __init__(self):
         common.log(10, common.words_file)
         super().__init__(common.words_file)
+
+# 针对监控对象的配置类
+class Targets(Expression):
+
+    def __init__(self):
+        common.log(10, common.targets_file)
+        super().__init__(common.targets_file)
+
+# 针对语言的配置类
+class Sentences(Sentence):
+
+    def __init__(self):
+        common.log(10, common.sentences_file)
+        super().__init__(common.sentences_file)
