@@ -6,8 +6,8 @@ import time
 
 # 全局变量
 
-nodes = configure.NodesConfiguration()
-words = configure.WordsConfiguration()
+nodes = configure.BombsWeight()
+words = configure.WordsWeight()
 shortcuts = hotkeys.Hotkey()
 node = ''
 
@@ -19,7 +19,7 @@ def choice_node():
     global node
 
     while 1:
-        tmp_nodes = nodes.pick_items()
+        tmp_nodes = nodes.pick_item()
 
         # 展示当前的选项
         print("当前抽取的卡片如下，请用数字选择卡片，回车重新抽取卡片，其他选项请打字输入：")
@@ -70,7 +70,7 @@ def remind(node, time = ""):
         return
     else:  # 带有计时的说话，需要随机语气
         params = {'node': node, 'time': time}
-        statement = words.pick_items(samples=1)[0]
+        statement = words.pick_item(samples=1)[0]
         statement = statement.format(**params)
         print(statement)
         speaker.speak(statement)
@@ -134,6 +134,7 @@ remind("主人好呀，想让静姝提醒您什么呢？")
 choice_node()
 choice_time()
 remind("好的主人，%s后您要%s是吧，静姝认真的记下了哦" % (common.seconds2str(common.seconds), node))
+time.sleep(7)
 
 # 注册热键
 shortcuts.setDaemon(True)
@@ -141,4 +142,4 @@ shortcuts.start()
 
 # 计时提醒
 countdown()
-time.sleep(3)
+time.sleep(7)
