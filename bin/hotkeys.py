@@ -1,42 +1,38 @@
 import threading
 import ctypes
 import ctypes.wintypes
-import win32con
+from win32con import *
 from bin import speaker, common
 
 user32 = ctypes.windll.user32  # Windows下的user32.dll
 
-
 class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
 
+    # 热键被调用时默认的方法
+    def f(self): common.log("调用了一个未被注册的热键", 20)
 
-    HotKeys = {
-        # http://www.kbdedit.com/manual/low_level_vk_list.html
-        # Ctrl + 0，加10分钟； Ctrl + 5，加5分钟
-        100 : (win32con.MOD_CONTROL, win32con.VK_DECIMAL, "+", 0),
-        10 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD0, "+", 10*60),
-        11 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD1, "+", 1*60),
-        12 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD2, "+", 2*60),
-        13 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD3, "+", 3*60),
-        14 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD4, "+", 4*60),
-        15 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD5, "+", 5*60),
-        16 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD6, "+", 6*60),
-        17 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD7, "+", 7*60),
-        18 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD8, "+", 8*60),
-        19 : (win32con.MOD_CONTROL, win32con.VK_NUMPAD9, "+", 9*60),
-
-        # Alt + 0，减10分钟； Alt + 5，减5分钟
-        200 : (win32con.MOD_ALT, win32con.VK_DECIMAL, "=", 0),
-        20 : (win32con.MOD_ALT, win32con.VK_NUMPAD0, "-", 10*60),
-        21 : (win32con.MOD_ALT, win32con.VK_NUMPAD1, "-", 1*60),
-        22 : (win32con.MOD_ALT, win32con.VK_NUMPAD2, "-", 2*60),
-        23 : (win32con.MOD_ALT, win32con.VK_NUMPAD3, "-", 3*60),
-        24 : (win32con.MOD_ALT, win32con.VK_NUMPAD4, "-", 4*60),
-        25 : (win32con.MOD_ALT, win32con.VK_NUMPAD5, "-", 5*60),
-        26 : (win32con.MOD_ALT, win32con.VK_NUMPAD6, "-", 6*60),
-        27 : (win32con.MOD_ALT, win32con.VK_NUMPAD7, "-", 7*60),
-        28 : (win32con.MOD_ALT, win32con.VK_NUMPAD8, "-", 8*60),
-        29 : (win32con.MOD_ALT, win32con.VK_NUMPAD9, "-", 9*60),
+    # 热键和方法的绑定映射
+    Mapping = {  # http://www.kbdedit.com/manual/low_level_vk_list.html
+        MOD_WIN:{
+            VK_NUMPAD1: f, VK_NUMPAD2: f, VK_NUMPAD3: f, VK_NUMPAD4: f, VK_NUMPAD5: f,
+            VK_NUMPAD6: f, VK_NUMPAD7: f, VK_NUMPAD8: f, VK_NUMPAD9: f, VK_NUMPAD0: f,
+            VK_DECIMAL: f, VK_ADD: f, VK_SUBTRACT: f, VK_MULTIPLY: f, VK_DIVIDE: f, VK_RETURN: f,
+        },
+        MOD_SHIFT: {
+            VK_NUMPAD1: f, VK_NUMPAD2: f, VK_NUMPAD3: f, VK_NUMPAD4: f, VK_NUMPAD5: f,
+            VK_NUMPAD6: f, VK_NUMPAD7: f, VK_NUMPAD8: f, VK_NUMPAD9: f, VK_NUMPAD0: f,
+            VK_DECIMAL: f, VK_ADD: f, VK_SUBTRACT: f, VK_MULTIPLY: f, VK_DIVIDE: f, VK_RETURN: f,
+        },
+        MOD_CONTROL: {
+            VK_NUMPAD1: f, VK_NUMPAD2: f, VK_NUMPAD3: f, VK_NUMPAD4: f, VK_NUMPAD5: f,
+            VK_NUMPAD6: f, VK_NUMPAD7: f, VK_NUMPAD8: f, VK_NUMPAD9: f, VK_NUMPAD0: f,
+            VK_DECIMAL: f, VK_ADD: f, VK_SUBTRACT: f, VK_MULTIPLY: f, VK_DIVIDE: f, VK_RETURN: f,
+        },
+        MOD_ALT: {
+            VK_NUMPAD1: f, VK_NUMPAD2: f, VK_NUMPAD3: f, VK_NUMPAD4: f, VK_NUMPAD5: f,
+            VK_NUMPAD6: f, VK_NUMPAD7: f, VK_NUMPAD8: f, VK_NUMPAD9: f, VK_NUMPAD0: f,
+            VK_DECIMAL: f, VK_ADD: f, VK_SUBTRACT: f, VK_MULTIPLY: f, VK_DIVIDE: f, VK_RETURN: f,
+        },
     }
 
     # 当相关热键被按下时，执行相关的命令，并进行相关提示
@@ -89,9 +85,15 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
         try:
             msg = ctypes.wintypes.MSG()
             while user32.GetMessageA(ctypes.byref(msg), None, 0, 0) != 0:
-                if msg.message == win32con.WM_HOTKEY:  # 当监测到有热键被按下时
+                if msg.message == WM_HOTKEY:  # 当监测到有热键被按下时
                     self.handler(msg.wParam)  # msg.wParam 就是热键注册的ID
                 user32.TranslateMessage(ctypes.byref(msg))
                 user32.DispatchMessageA(ctypes.byref(msg))
         finally:
             self.unregister()
+
+def check():
+    pass
+
+def listen():
+    pass # todo: 热键的启动以后放到这里
