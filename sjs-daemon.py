@@ -19,9 +19,7 @@ def run_monitor():
     monitor_thread.start()
 
 def register_shortcuts():
-    shortcuts = hotkeys.Hotkey()
-    shortcuts.setDaemon(True)
-    shortcuts.start()
+    hotkeys.listen()
 
 menu_options = (
     ("Say Hello", "assets\icon.ico", say_hello),
@@ -33,10 +31,6 @@ menu_options = (
         ("Say Hello", None, say_hello),
     )),
 )
-
-
-
-
 
 register_shortcuts()
 run_monitor()

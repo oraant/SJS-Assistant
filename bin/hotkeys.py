@@ -101,7 +101,7 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
 hk = Hotkey()
 hk.setDaemon(True)
 
-def start():
+def listen():
     hk.start()
 
 def register(mod, key, func):
