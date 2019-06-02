@@ -100,7 +100,8 @@ class Tracer(threading.Thread):  # todo: 像hotkey中注册热键
             if self.count_secs in self.remind_pattern[level]:
 
                 self.speak('trace_remind_' + level, {
-                    'count_detail': common.seconds2str(self.count_secs)
+                    'count_detail': common.seconds2str(self.count_secs),
+                    'count_secs': self.count_secs,
                 })
 
     def trace_stop(self):
