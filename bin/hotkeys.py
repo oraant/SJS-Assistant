@@ -54,7 +54,6 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
         key_num = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '.': 10, '+': 11,
                    '-': 12, '*': 13, '/': 14, '↵': 15}
         map_num = mod_num[mod] + key_num[key]
-        print(map_num)
         self.Mapping[map_num][2] = func
 
     def insert_callback(self, mod, key, func):
@@ -69,7 +68,7 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
     def register(self):
         for id, (modifier, key, func) in self.Mapping.items():
             if not user32.RegisterHotKey(None, id, modifier, key):
-                common.log("热键注册失败！ID: %s, MOD: %s, KEY: %s" % (id, modifier, key), 30)
+                common.log(30, "热键注册失败！ID: %s, MOD: %s, KEY: %s" % (id, modifier, key))
 
     # 批量取消注册过的热键，必须得释放热键，否则下次就会注册失败
     def unregister(self):
@@ -80,7 +79,7 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
     def handle(self, id):
         f = self.Mapping[id][2]
         if f: f()
-        else: common.log("一个未被注册的热键调用了", 20)
+        else: common.log(20, "一个未被注册的热键调用了")
 
     # 循环检测热键是否被触发
     def listener(self):
