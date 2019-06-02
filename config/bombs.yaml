@@ -6,19 +6,19 @@
 # 如果把学习、工作、娱乐、休息的习惯培养好，也能当做引力炸弹
 
 玩飞镖:
-  active: false
+  active: true
   count: 0
   <bomb_playing>: [玩, 投掷, 投, 扔]
   <bomb_title>: 飞镖
 读书:
-  active: false
-  count: 4
+  active: true
+  count: 5
   <bomb_playing>: [读, 看, 阅览, 阅读]
   <bomb_title>: 书
 下载几本杂志:
   <bomb_playing>: [下载, 下]
   <bomb_title>: 杂志
-  active: false
+  active: true
   count: 7
 
 # 低频的备选选项：

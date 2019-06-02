@@ -4,7 +4,6 @@ from functools import partial
 
 from bin import common
 from bin import speaker
-from bin import sentence
 from bin import configure
 from bin import windows
 from bin import hotkeys
