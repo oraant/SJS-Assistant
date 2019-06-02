@@ -1,4 +1,5 @@
 from ruamel.yaml import YAML
+from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from bin import common
 from random import sample
 
@@ -9,13 +10,12 @@ class Configuration():
 
     def __init__(self, filename):
         self.filename = filename # 需要在这里指定子类的文件路径
-        self.yaml = YAML(typ='safe')
+        self.yaml = YAML()
         self.yaml.default_flow_style = False
 
         common.log(10, self.filename)
-        self.configuration = {}
-        self.load_config()  # todo: 直接在init里加载，是否合适？
-
+        self.configuration = None
+        self.load_config()
 
     # 在实例的变量中存、取配置文件
     def load_config(self):
@@ -26,7 +26,6 @@ class Configuration():
     def save_config(self):
         with open(self.filename, 'w', encoding='utf-8') as f:
             self.yaml.dump(self.configuration, f)
-
 
     # 返回给别人当前配置，或接收并保存配置文件
     def get_config(self):
@@ -46,17 +45,48 @@ class Configuration():
         else:
             return False
 
+    # 查找某一项的下标，以及其前后各项的下标
+    def search_index(self, item):
+
+        self.load_config()
+        cur, next, prev = 0, 0, 0
+
+        if not self.search_item(item):
+            common.log(40, '发现了一个不在配置文件中的项目。可能是因为配置文件被修改过的原因')
+            return (0, 0, 0)
+
+        max = len(self.configuration.keys())
+        if max <= 1: return (0, 0, 0)
+
+        for key in self.configuration.keys():
+            if item == key: break
+            cur += 1
+
+        if (cur == max - 1):
+            next = 0
+        else:
+            next = cur + 1
+
+        if (cur == 0):
+            prev = max - 1
+        else:
+            prev = cur - 1
+
+        return (prev, cur, next)
+
 
 # 针对列表的配置类，提供了开关、权重、随机抽取等功能
 class WeightList(Configuration):
 
-    picked = []
+    picked_key = ""
 
+    # ----------------------------------------------
     # 从配置表中，按照一定规则，随机抽取一部分内容
+
     def pick_items(self, samples=3, weight=True, switch=True):
         self.load_config()
 
-        self.picked = []
+        tmp = []
 
         for item in self.configuration:
             name, count, active = item, self.configuration[item]["count"], self.configuration[item]["active"]
@@ -67,16 +97,49 @@ class WeightList(Configuration):
             else: count = 1
 
             for i in range(count):  # 按照权重往临时表里增加内容
-                self.picked.append(self.configuration[name])
+                tmp.append(name)
 
-        return sample(self.picked, samples)
+        if not tmp: common.log(40, "该配置文件中没有活跃的配置：配置文件:%s" % (self.filename))
+        return sample(tmp, samples)
 
     def pick_item(self):
-        return self.pick_items(samples=1)[0]
+        self.picked_key = self.pick_items(samples=1)[0]
+        self.add_weight(self.picked_key)
+        return self.picked_key
+
+    def pick_next(self):
+        self.load_config()
+        if not self.picked_key: self.pick_item()
+        self.cut_weight(self.picked_key)
+
+        picked_key = self.picked_key
+        while True:
+            prev, cur, next = self.search_index(picked_key)
+            picked_key = list(self.configuration.keys())[next]
+            if self.configuration[picked_key]['active']: break
+
+        self.picked_key = picked_key
+        self.add_weight(self.picked_key)
+        return self.picked_key
+
+    def pick_prev(self):
+        self.load_config()
+        if not self.picked_key: self.pick_item()
+        self.cut_weight(self.picked_key)
+
+        picked_key = self.picked_key
+        while True:
+            prev, cur, next = self.search_index(picked_key)
+            picked_key = list(self.configuration.keys())[prev]
+            if self.configuration[picked_key]['active']: break
+
+        self.picked_key = picked_key
+        self.add_weight(self.picked_key)
+        return self.picked_key
 
     def repeat_pick(self):
-        if self.picked:
-            return self.picked
+        if self.picked_key:
+            return self.picked_key
         else:
             return "刚刚没有选则炸弹，如何重复呢"
 
@@ -121,7 +184,7 @@ class WeightList(Configuration):
         self.set_switch(item, True)
 
     def close_switch(self, item):
-        self.set_switch(item, True)
+        self.set_switch(item, False)
 
 
 # 针对语音的配置类
@@ -134,7 +197,7 @@ class Sentence(Configuration):
         if type(config) is str:
             return config
 
-        if type(config) is list:
+        if type(config) is CommentedSeq:
             pickup = sample(config, 1)[0]
             return pickup
 
@@ -167,7 +230,6 @@ class Sentence(Configuration):
             return "静姝刚才没有说话，为什么要重复呢？"
 
 
-
 # 针对表达的配置类
 # todo: 未来可能会把sentence、expression两个类，换成一个类，且分成“递归随机挑选”、“递归向上替换”两部分。
 #  先把不确定的确定下来，然后直接传递一整个？？
@@ -186,7 +248,7 @@ class Expression(Configuration):
 
         for key in item.keys():
             if key.startswith("<") and key.endswith(">"):
-                if type(item[key]) is list:
+                if type(item[key]) is CommentedSeq:
                     self.package[key.strip("<>")] = sample(item[key], 1)[0]
                 elif type(item[key]) is str:
                     self.package[key.strip("<>")] = item[key]

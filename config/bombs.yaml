@@ -1,450 +1,457 @@
+# 语法：注意，最少也得有一个有效的配置，否则程序会死循环
+
 # 吃零食、喝饮料之类的都喜欢，但是比较伤身体
 # 读书、休息、运动、看书都比较喜欢，且比较短暂
 # 创作类的虽然喜欢，但是太耗时
 # 如果把学习、工作、娱乐、休息的习惯培养好，也能当做引力炸弹
 
 玩飞镖:
-  active: true
+  active: false
   count: 0
-  <bomb_playing>: ['玩', '投掷', '投', '扔']
-  <bomb_title>: ['飞镖', '磁性飞镖', '飞刀']
+  <bomb_playing>: [玩, 投掷, 投, 扔]
+  <bomb_title>: 飞镖
 读书:
-  active: true
-  count: 0
-  <bomb_playing>: ['读', '看', '阅览', '阅读']
-  <bomb_title>: ['书', '书籍']
+  active: false
+  count: 4
+  <bomb_playing>: [读, 看, 阅览, 阅读]
+  <bomb_title>: 书
+下载几本杂志:
+  <bomb_playing>: [下载, 下]
+  <bomb_title>: 杂志
+  active: false
+  count: 7
 
 # 低频的备选选项：
 
-下载几本书籍:
-  active: false
-  count: 0
-丢一会沙包:
-  active: false
-  count: 0
-书法:
-  active: false
-  count: 0
-伸展吐纳一下:
-  active: false
-  count: 0
-做一个手工，比如折纸、叠道具、纸飞机之类的:
-  active: false
-  count: 0
-做几个俯卧撑:
-  active: false
-  count: 1
-做几个倒立:
-  active: false
-  count: 0
-做几个平板支撑:
-  active: false
-  count: 0
-像高手一样踢一会毽子:
-  active: false
-  count: 0
-写点散文:
-  active: false
-  count: 0
-写点日记，记录心情:
-  active: false
-  count: 0
-写首小诗:
-  active: false
-  count: 0
-创作几个镜头:
-  active: false
-  count: 0
-创作博馆平台，走上人生巅峰:
-  active: false
-  count: 0
-创作点东西:
-  active: false
-  count: 0
-制作全平台打卡软件:
-  active: false
-  count: 0
-午睡:
-  active: false
-  count: 0
-叠一只纸心:
-  active: false
-  count: 0
-叠一只纸青蛙:
-  active: false
-  count: 0
-叠一只纸风车:
-  active: false
-  count: 0
-叠一只纸飞机:
-  active: false
-  count: 0
-叠一只纸鹤:
-  active: false
-  count: 0
-只刷半道算法题:
-  active: false
-  count: 0
-吃个桃子:
-  active: false
-  count: 0
-吃个火龙果:
-  active: false
-  count: 0
-吃个猕猴桃:
-  active: false
-  count: 0
-吃几个橘子:
-  active: false
-  count: 0
-吃几个草莓:
-  active: false
-  count: 0
-吃块冰糕:
-  active: false
-  count: 1
-吃块巧克力:
-  active: false
-  count: 0
-吃块甘蔗:
-  active: false
-  count: 0
-吃块菠萝:
-  active: false
-  count: 0
-吃块西瓜:
-  active: false
-  count: 0
-吃根火腿:
-  active: false
-  count: 0
-吃根辣条:
-  active: false
-  count: 0
-吃根香蕉:
-  active: false
-  count: 0
-吃点樱桃:
-  active: false
-  count: 0
-吃点葡萄:
-  active: false
-  count: 0
-听一听古筝:
-  active: false
-  count: 0
-听一听名曲:
-  active: false
-  count: 0
-听一听老友记:
-  active: false
-  count: 0
-听一段相声:
-  active: false
-  count: 1
-品杯咖啡:
-  active: false
-  count: 0
-喝两口水:
-  active: false
-  count: 0
-喝包牛奶:
-  active: false
-  count: 0
-喝包酸奶:
-  active: false
-  count: 0
-喝瓶冰红茶:
-  active: false
-  count: 0
-喝瓶可乐:
-  active: false
-  count: 0
-喷洒一会水壶:
-  active: false
-  count: 0
-大字躺:
-  active: false
-  count: 1
-大脑放空:
-  active: false
-  count: 0
-学一丁点思修:
-  active: false
-  count: 0
-学一丁点概率:
-  active: false
-  count: 0
-学一丁点毛概:
-  active: false
-  count: 0
-学一丁点算法:
-  active: false
-  count: 1
-学一丁点系统:
-  active: false
-  count: 0
-学一丁点线代:
-  active: false
-  count: 0
-学一丁点网络:
-  active: false
-  count: 0
-学一丁点计组:
-  active: false
-  count: 0
-学一丁点马哲:
-  active: false
-  count: 0
-学一丁点高数:
-  active: false
-  count: 0
-学一句长难句:
-  active: false
-  count: 1
-学一学政治军事:
-  active: false
-  count: 0
-学一学时尚设计:
-  active: false
-  count: 0
-学一学自然科学，比如生物，物理等:
-  active: false
-  count: 0
-学一学葫芦丝:
-  active: false
-  count: 0
-学一学财富经济:
-  active: false
-  count: 0
-学一张折纸:
-  active: false
-  count: 0
-学习一个成语典故:
-  active: false
-  count: 0
-学习渲染技巧:
-  active: false
-  count: 0
-学学漫画:
-  active: false
-  count: 0
-学点世界语:
-  active: false
-  count: 0
-学点俄语:
-  active: false
-  count: 0
-学点日语:
-  active: false
-  count: 0
-学点法语:
-  active: false
-  count: 0
-学点英语:
-  active: false
-  count: 1
-完善下采访视频:
-  active: false
-  count: 0
-建模一个物品:
-  active: false
-  count: 0
-念一段可爱的咒语:
-  active: false
-  count: 0
-念一段抽风的咒语:
-  active: false
-  count: 0
-念一段炫酷的咒语:
-  active: false
-  count: 0
-念一段神秘的咒语:
-  active: false
-  count: 0
-找找好玩的材质:
-  active: false
-  count: 0
-找找好玩的贴图:
-  active: false
-  count: 0
-投掷一会卡片:
-  active: false
-  count: 0
-挑一张喜欢的图案进行涂色:
-  active: false
-  count: 0
-挑一本经典名著读:
-  active: false
-  count: 0
-挑一篇诗经:
-  active: false
-  count: 0
-挑战一分钟手绘:
-  active: false
-  count: 0
-掐一个传递信息的手决:
-  active: false
-  count: 0
-掐一个金碧辉煌的手决:
-  active: false
-  count: 0
-掐一个隐秘的手决:
-  active: false
-  count: 0
-摆一个不开心的姿势:
-  active: false
-  count: 0
-摆一个低调的姿势:
-  active: false
-  count: 0
-摆一个可爱的姿势:
-  active: false
-  count: 0
-摆一个炫酷的姿势:
-  active: false
-  count: 0
-摆一摆积木:
-  active: false
-  count: 0
-散散步:
-  active: false
-  count: 1
-早睡:
-  active: false
-  count: 0
-早起:
-  active: false
-  count: 0
-炫酷的投掷一会飞镖:
-  active: false
-  count: 1
-猜一个灯谜:
-  active: false
-  count: 0
-猜一个脑筋急转弯:
-  active: false
-  count: 0
-猜一个谜语:
-  active: false
-  count: 0
-玩一会抛石子游戏:
-  active: false
-  count: 0
-玩弹弓:
-  active: false
-  count: 0
-玩硬币:
-  active: false
-  count: 0
-用随机100个汉字组成词语:
-  active: false
-  count: 0
-画一个好看的符号:
-  active: false
-  count: 0
-画一个帮派的标志符号:
-  active: false
-  count: 0
-画一个有趣的符号:
-  active: false
-  count: 0
-画一个神秘的符号:
-  active: false
-  count: 0
-画几帧炫酷的动画:
-  active: false
-  count: 0
-看点技术书籍:
-  active: false
-  count: 0
-石头剪刀布:
-  active: false
-  count: 0
-练一练钢琴:
-  active: false
-  count: 0
-给百度网盘归档分类:
-  active: false
-  count: 0
-编一段相声:
-  active: false
-  count: 0
-编一段简谱:
-  active: false
-  count: 0
-翻花绳:
-  active: false
-  count: 0
-背一背写作:
-  active: false
-  count: 0
-背几个单词:
-  active: false
-  count: 0
-蒙头缩成球:
-  active: false
-  count: 0
-装作神秘高手投掷几枚飞镖:
-  active: false
-  count: 0
-见识见识名画:
-  active: false
-  count: 0
-记录小说片段或设想:
-  active: false
-  count: 0
-设计个小动画:
-  active: false
-  count: 0
-设计几个动作:
-  active: false
-  count: 0
-试试手绘:
-  active: false
-  count: 0
-试试板绘:
-  active: false
-  count: 0
-读一篇散文:
-  active: false
-  count: 0
-读一读世界史:
-  active: false
-  count: 0
-读一读人类简史:
-  active: false
-  count: 2
-读一读英文诗:
-  active: false
-  count: 0
-读一读论语:
-  active: false
-  count: 0
-读一读资本论:
-  active: false
-  count: 2
-读一读顾城诗集:
-  active: false
-  count: 0
-读几篇阅读:
-  active: false
-  count: 0
-赏一首诗词歌赋:
-  active: false
-  count: 0
-赏析一副名画:
-  active: false
-  count: 0
-跑跑步:
-  active: false
-  count: 2
-闭眼小憩:
-  active: false
-  count: 0
-随心所欲的打滚:
-  active: false
-  count: 1
-随心所欲的涂鸦随机到的汉字:
-  active: false
-  count: 0
+#下载几本书籍:
+#  active: false
+#  count: 0
+#丢一会沙包:
+#  active: false
+#  count: 0
+#书法:
+#  active: false
+#  count: 0
+#伸展吐纳一下:
+#  active: false
+#  count: 0
+#做一个手工，比如折纸、叠道具、纸飞机之类的:
+#  active: false
+#  count: 0
+#做几个俯卧撑:
+#  active: false
+#  count: 1
+#做几个倒立:
+#  active: false
+#  count: 0
+#做几个平板支撑:
+#  active: false
+#  count: 0
+#像高手一样踢一会毽子:
+#  active: false
+#  count: 0
+#写点散文:
+#  active: false
+#  count: 0
+#写点日记，记录心情:
+#  active: false
+#  count: 0
+#写首小诗:
+#  active: false
+#  count: 0
+#创作几个镜头:
+#  active: false
+#  count: 0
+#创作博馆平台，走上人生巅峰:
+#  active: false
+#  count: 0
+#创作点东西:
+#  active: false
+#  count: 0
+#制作全平台打卡软件:
+#  active: false
+#  count: 0
+#午睡:
+#  active: false
+#  count: 0
+#叠一只纸心:
+#  active: false
+#  count: 0
+#叠一只纸青蛙:
+#  active: false
+#  count: 0
+#叠一只纸风车:
+#  active: false
+#  count: 0
+#叠一只纸飞机:
+#  active: false
+#  count: 0
+#叠一只纸鹤:
+#  active: false
+#  count: 0
+#只刷半道算法题:
+#  active: false
+#  count: 0
+#吃个桃子:
+#  active: false
+#  count: 0
+#吃个火龙果:
+#  active: false
+#  count: 0
+#吃个猕猴桃:
+#  active: false
+#  count: 0
+#吃几个橘子:
+#  active: false
+#  count: 0
+#吃几个草莓:
+#  active: false
+#  count: 0
+#吃块冰糕:
+#  active: false
+#  count: 1
+#吃块巧克力:
+#  active: false
+#  count: 0
+#吃块甘蔗:
+#  active: false
+#  count: 0
+#吃块菠萝:
+#  active: false
+#  count: 0
+#吃块西瓜:
+#  active: false
+#  count: 0
+#吃根火腿:
+#  active: false
+#  count: 0
+#吃根辣条:
+#  active: false
+#  count: 0
+#吃根香蕉:
+#  active: false
+#  count: 0
+#吃点樱桃:
+#  active: false
+#  count: 0
+#吃点葡萄:
+#  active: false
+#  count: 0
+#听一听古筝:
+#  active: false
+#  count: 0
+#听一听名曲:
+#  active: false
+#  count: 0
+#听一听老友记:
+#  active: false
+#  count: 0
+#听一段相声:
+#  active: false
+#  count: 1
+#品杯咖啡:
+#  active: false
+#  count: 0
+#喝两口水:
+#  active: false
+#  count: 0
+#喝包牛奶:
+#  active: false
+#  count: 0
+#喝包酸奶:
+#  active: false
+#  count: 0
+#喝瓶冰红茶:
+#  active: false
+#  count: 0
+#喝瓶可乐:
+#  active: false
+#  count: 0
+#喷洒一会水壶:
+#  active: false
+#  count: 0
+#大字躺:
+#  active: false
+#  count: 1
+#大脑放空:
+#  active: false
+#  count: 0
+#学一丁点思修:
+#  active: false
+#  count: 0
+#学一丁点概率:
+#  active: false
+#  count: 0
+#学一丁点毛概:
+#  active: false
+#  count: 0
+#学一丁点算法:
+#  active: false
+#  count: 1
+#学一丁点系统:
+#  active: false
+#  count: 0
+#学一丁点线代:
+#  active: false
+#  count: 0
+#学一丁点网络:
+#  active: false
+#  count: 0
+#学一丁点计组:
+#  active: false
+#  count: 0
+#学一丁点马哲:
+#  active: false
+#  count: 0
+#学一丁点高数:
+#  active: false
+#  count: 0
+#学一句长难句:
+#  active: false
+#  count: 1
+#学一学政治军事:
+#  active: false
+#  count: 0
+#学一学时尚设计:
+#  active: false
+#  count: 0
+#学一学自然科学，比如生物，物理等:
+#  active: false
+#  count: 0
+#学一学葫芦丝:
+#  active: false
+#  count: 0
+#学一学财富经济:
+#  active: false
+#  count: 0
+#学一张折纸:
+#  active: false
+#  count: 0
+#学习一个成语典故:
+#  active: false
+#  count: 0
+#学习渲染技巧:
+#  active: false
+#  count: 0
+#学学漫画:
+#  active: false
+#  count: 0
+#学点世界语:
+#  active: false
+#  count: 0
+#学点俄语:
+#  active: false
+#  count: 0
+#学点日语:
+#  active: false
+#  count: 0
+#学点法语:
+#  active: false
+#  count: 0
+#学点英语:
+#  active: false
+#  count: 1
+#完善下采访视频:
+#  active: false
+#  count: 0
+#建模一个物品:
+#  active: false
+#  count: 0
+#念一段可爱的咒语:
+#  active: false
+#  count: 0
+#念一段抽风的咒语:
+#  active: false
+#  count: 0
+#念一段炫酷的咒语:
+#  active: false
+#  count: 0
+#念一段神秘的咒语:
+#  active: false
+#  count: 0
+#找找好玩的材质:
+#  active: false
+#  count: 0
+#找找好玩的贴图:
+#  active: false
+#  count: 0
+#投掷一会卡片:
+#  active: false
+#  count: 0
+#挑一张喜欢的图案进行涂色:
+#  active: false
+#  count: 0
+#挑一本经典名著读:
+#  active: false
+#  count: 0
+#挑一篇诗经:
+#  active: false
+#  count: 0
+#挑战一分钟手绘:
+#  active: false
+#  count: 0
+#掐一个传递信息的手决:
+#  active: false
+#  count: 0
+#掐一个金碧辉煌的手决:
+#  active: false
+#  count: 0
+#掐一个隐秘的手决:
+#  active: false
+#  count: 0
+#摆一个不开心的姿势:
+#  active: false
+#  count: 0
+#摆一个低调的姿势:
+#  active: false
+#  count: 0
+#摆一个可爱的姿势:
+#  active: false
+#  count: 0
+#摆一个炫酷的姿势:
+#  active: false
+#  count: 0
+#摆一摆积木:
+#  active: false
+#  count: 0
+#散散步:
+#  active: false
+#  count: 1
+#早睡:
+#  active: false
+#  count: 0
+#早起:
+#  active: false
+#  count: 0
+#炫酷的投掷一会飞镖:
+#  active: false
+#  count: 1
+#猜一个灯谜:
+#  active: false
+#  count: 0
+#猜一个脑筋急转弯:
+#  active: false
+#  count: 0
+#猜一个谜语:
+#  active: false
+#  count: 0
+#玩一会抛石子游戏:
+#  active: false
+#  count: 0
+#玩弹弓:
+#  active: false
+#  count: 0
+#玩硬币:
+#  active: false
+#  count: 0
+#用随机100个汉字组成词语:
+#  active: false
+#  count: 0
+#画一个好看的符号:
+#  active: false
+#  count: 0
+#画一个帮派的标志符号:
+#  active: false
+#  count: 0
+#画一个有趣的符号:
+#  active: false
+#  count: 0
+#画一个神秘的符号:
+#  active: false
+#  count: 0
+#画几帧炫酷的动画:
+#  active: false
+#  count: 0
+#看点技术书籍:
+#  active: false
+#  count: 0
+#石头剪刀布:
+#  active: false
+#  count: 0
+#练一练钢琴:
+#  active: false
+#  count: 0
+#给百度网盘归档分类:
+#  active: false
+#  count: 0
+#编一段相声:
+#  active: false
+#  count: 0
+#编一段简谱:
+#  active: false
+#  count: 0
+#翻花绳:
+#  active: false
+#  count: 0
+#背一背写作:
+#  active: false
+#  count: 0
+#背几个单词:
+#  active: false
+#  count: 0
+#蒙头缩成球:
+#  active: false
+#  count: 0
+#装作神秘高手投掷几枚飞镖:
+#  active: false
+#  count: 0
+#见识见识名画:
+#  active: false
+#  count: 0
+#记录小说片段或设想:
+#  active: false
+#  count: 0
+#设计个小动画:
+#  active: false
+#  count: 0
+#设计几个动作:
+#  active: false
+#  count: 0
+#试试手绘:
+#  active: false
+#  count: 0
+#试试板绘:
+#  active: false
+#  count: 0
+#读一篇散文:
+#  active: false
+#  count: 0
+#读一读世界史:
+#  active: false
+#  count: 0
+#读一读人类简史:
+#  active: false
+#  count: 2
+#读一读英文诗:
+#  active: false
+#  count: 0
+#读一读论语:
+#  active: false
+#  count: 0
+#读一读资本论:
+#  active: false
+#  count: 2
+#读一读顾城诗集:
+#  active: false
+#  count: 0
+#读几篇阅读:
+#  active: false
+#  count: 0
+#赏一首诗词歌赋:
+#  active: false
+#  count: 0
+#赏析一副名画:
+#  active: false
+#  count: 0
+#跑跑步:
+#  active: false
+#  count: 2
+#闭眼小憩:
+#  active: false
+#  count: 0
+#随心所欲的打滚:
+#  active: false
+#  count: 1
+#随心所欲的涂鸦随机到的汉字:
+#  active: false
+#  count: 0

@@ -19,7 +19,7 @@ def choice_node():
     global node
 
     while 1:
-        tmp_nodes = nodes.pick_item()
+        tmp_nodes = nodes.pick_items()
 
         # 展示当前的选项
         print("当前抽取的卡片如下，请用数字选择卡片，回车重新抽取卡片，其他选项请打字输入：")
@@ -70,7 +70,7 @@ def remind(node, time = ""):
         return
     else:  # 带有计时的说话，需要随机语气
         params = {'node': node, 'time': time}
-        statement = words.pick_item(samples=1)[0]
+        statement = words.pick_items(samples=1)[0]
         statement = statement.format(**params)
         print(statement)
         speaker.speak(statement)

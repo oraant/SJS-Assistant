@@ -1,9 +1,13 @@
 import threading, time
+import webbrowser
+from functools import partial
+
 from bin import common
 from bin import speaker
 from bin import sentence
 from bin import configure
 from bin import windows
+from bin import hotkeys
 
 
 
@@ -24,19 +28,24 @@ class Tracer(threading.Thread):  # todo: 像hotkey中注册热键
     }
 
     def __init__(self, target_name):
+        self.sentences_conf = configure.Sentences()
+        self.targets_conf = configure.Targets()
+        self.bombs_conf = configure.Bombs()
+
         self.target_name = target_name
-        self.target_conf = configure.Targets().configuration[target_name]
+        self.target_conf = self.targets_conf.configuration[target_name]
 
         self.frequency = common.str2seconds(self.target_conf['frequency'])  # 监控关键词的频率，防止秒开秒关的情况
         self.trace_gap = common.str2seconds(self.target_conf['trace_gap'])  # 追踪完成后，间隔多少秒重新开始监控
         self.start_lag = common.str2seconds(self.target_conf['start_lag'])  # 播放后的延迟启动时间，保证播放完启动语音
 
-        self.bomb_name = configure.Bombs().pick_item()[0]
+        self.bomb_name = self.bombs_conf.pick_item()
 
         super().__init__()
 
     def run(self):
 
+        self.register_callback()  # todo: 后期要统一管理，只能有一个注册的
         self.trace_welcome()
 
         while True:
@@ -68,14 +77,12 @@ class Tracer(threading.Thread):  # todo: 像hotkey中注册热键
     # -----------------------------------
 
     def trace_welcome(self):
-        common.log('开始监控' + self.target_name, 10)
+        common.log(10, '开始监控' + self.target_name)
         pass
 
     def trace_shutdown(self):
-        common.log('停止监控' + self.target_name, 10)
+        common.log(10, '停止监控' + self.target_name)
         pass
-
-    # -----------------------------------
 
     def trace_start(self):
 
@@ -83,33 +90,37 @@ class Tracer(threading.Thread):  # todo: 像hotkey中注册热键
         self.count_secs = common.str2seconds(self.target_conf['count_short'])
         self.elapsed_secs = self.count_secs
 
-        count_detail = common.seconds2str(self.count_secs)
-        speaker.speak(sentence.trace_start(self.target_name, self.bomb_name, count_detail))
-        time.sleep(20)  # 保证其说完话
+        self.speak('trace_start', {
+            'count_detail': common.seconds2str(self.count_secs)
+        })
+
+        time.sleep(self.start_lag)  # 保证其说完话
 
     def trace_remind(self):
-        for key in self.remind_pattern.keys():
-            if self.count_secs in self.remind_pattern[key]:
+        for level in self.remind_pattern.keys():
+            if self.count_secs in self.remind_pattern[level]:
 
-                count_detail = common.seconds2str(self.count_secs)
-                words = sentence.trace_remind(self.target_name, self.bomb_name, self.count_secs, key)
-                speaker.speak(words)
+                self.speak('trace_remind_' + level, {
+                    'count_detail': common.seconds2str(self.count_secs)
+                })
 
     def trace_stop(self):
 
-        count_detail = common.seconds2str(self.count_secs)
-        elapsed_detail = common.seconds2str(self.elapsed_secs - self.count_secs)
-        trace_gap = common.seconds2str(self.trace_gap)
-        speaker.speak(sentence.trace_stop(self.target_name, self.bomb_name, count_detail, elapsed_detail, trace_gap))  # todo: 将形式简化为一个键值对？
+        self.speak('trace_stop', {
+            'count_detail': common.seconds2str(self.count_secs),
+            'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
+            'trace_gap': common.seconds2str(self.trace_gap),
+        })
 
         self.running = False
         time.sleep(self.trace_gap)
 
     def trace_finish(self):
 
-        elapsed_detail = common.seconds2str(self.elapsed_secs)
-        trace_gap = common.seconds2str(self.trace_gap)
-        speaker.speak(sentence.trace_finish(self.target_name, self.bomb_name, elapsed_detail, trace_gap))
+        self.speak('trace_finish', {
+            'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
+            'trace_gap': common.seconds2str(self.trace_gap),
+        })
 
         self.running = False
         time.sleep(self.trace_gap)
@@ -146,18 +157,100 @@ class Tracer(threading.Thread):  # todo: 像hotkey中注册热键
         time.sleep(1)
         self.count_secs -= 1
 
-    def count_plus(self):
+    def count_plus(self, num):
+        self.count_secs += num * 60
+        self.elapsed_secs += num * 60
+        self.speak('plus_minutes', {
+            'change_detail': num + '分钟',
+            'count_detail': common.seconds2str(self.count_secs),
+        })
+
+    def count_minus(self, num):
+        self.count_secs -= num * 60
+        self.elapsed_secs -= num * 60
+        self.speak('plus_minutes', {
+            'change_detail': num + '分钟',
+            'count_detail': common.seconds2str(self.count_secs),
+        })
+
+    def report_tracer(self):
+        pass
+    def next_tracer(self):
+        pass
+    def prev_tracer(self):
+        pass
+    def random_tracer(self):
+        pass
+    def clear_tracer(self):
+        self.count_secs = 0
+        self.elapsed_secs -= self.count_secs
+    def edit_tracer(self):
         pass
 
-    def count_minus(self):
-        pass
-
-    def count_clear(self):
-        pass
+    def report_bomb(self):
+        self.speak('report_bomb', {})
+    def next_bomb(self):
+        self.bomb_name = self.bombs_conf.pick_next()
+        self.speak('next_bomb', {})
+    def prev_bomb(self):
+        self.bomb_name = self.bombs_conf.pick_prev()
+        self.speak('prev_bomb', {})
+    def random_bomb(self):
+        self.bomb_name = self.bombs_conf.pick_item()
+        self.speak('random_bomb', {})
+    def clear_bomb(self):
+        self.bombs_conf.close_switch(self.bomb_name)
+        self.speak('clear_bomb', {})
+    def edit_bomb(self):
+        webbrowser.open(common.bombs_file)
+        self.speak('edit_bomb', {})
 
     # -----------------------------------
 
-    def shut_down(self):  # 正在进行中的任务不会被shutdown
+    def register_callback(self):
+        cp, cm = self.count_plus, self.count_minus
+        cp1, cp2, cp3, cp4, cp5 = partial(cp, 1), partial(cp, 2), partial(cp, 3), partial(cp, 4), partial(cp, 5)
+        cp6, cp7, cp8, cp9, cp10 = partial(cp, 6), partial(cp, 7), partial(cp, 8), partial(cp, 9), partial(cp, 10)
+        cm1, cm2, cm3, cm4, cm5 = partial(cm, 1), partial(cm, 2), partial(cm, 3), partial(cm, 4), partial(cm, 5)
+        cm6, cm7, cm8, cm9, cm10 = partial(cm, 6), partial(cm, 7), partial(cm, 8), partial(cm, 9), partial(cm, 10)
+
+        maps = [
+            # Add num minutes
+            ['Ctrl', '1', cp1], ['Ctrl', '2', cp2], ['Ctrl', '3', cp3], ['Ctrl', '4', cp4], ['Ctrl', '5', cp5],
+            ['Ctrl', '6', cp6], ['Ctrl', '7', cp7], ['Ctrl', '8', cp8], ['Ctrl', '9', cp9], ['Ctrl', '0', cp10],
+
+            # Cut num minutes
+            ['Alt', '1', cm1], ['Alt', '2', cm2], ['Alt', '3', cm3], ['Alt', '4', cm4], ['Alt', '5', cm5],
+            ['Alt', '6', cm6], ['Alt', '7', cm7], ['Alt', '8', cm8], ['Alt', '9', cm9], ['Alt', '0', cm10],
+
+            # Interact with Tracer
+            ['Ctrl', '.', self.report_tracer], ['Ctrl', '+', self.next_tracer], ['Ctrl', '-', self.prev_tracer],
+            ['Ctrl', '*', self.random_tracer], ['Ctrl', '/', self.clear_tracer], ['Ctrl', '↵', self.edit_tracer],
+
+            # Interact with Bomb
+            ['Alt', '.', self.report_bomb], ['Alt', '+', self.next_bomb], ['Alt', '-', self.prev_bomb],
+            ['Alt', '*', self.random_bomb], ['Alt', '/', self.clear_bomb], ['Alt', '↵', self.edit_bomb],
+        ]
+
+        for (mod, key, func) in maps:
+            hotkeys.register(mod, key, func)
+
+    def speak(self, conf_key, ext_dict):
+        pattern = self.sentences_conf.get_sentence(conf_key)
+        target_dict = self.targets_conf.get_package(self.target_name)
+        bomb_dict = self.bombs_conf.get_package(self.bomb_name)
+
+        pattern_dict = {}
+        pattern_dict.update(target_dict)
+        pattern_dict.update(bomb_dict)
+        pattern_dict.update(ext_dict)
+
+        formatted = pattern.format(**pattern_dict)
+        speaker.speak(formatted)
+
+    # -----------------------------------
+
+    def shut_down(self):  # 正在追踪中的任务不会被shutdown，只会停止那些还未追踪的监控任务
         self.shutdown = True
 
 

@@ -24,13 +24,13 @@ job_confirm:
 
 trace_start:
   meta:
-    - '{phrase_1}{phrase_2}{phrase_3}，{phrase_4}，{phrase_5}'
+    - '{phrase_1}，{phrase_2}{phrase_3}，{phrase_4}，{phrase_5}'
     - '{phrase_2}{phrase_3}，{phrase_4}，{phrase_5}'
 
   phrase_1:
     meta:
       - '{master}'
-    master: ['主人', '小主', '小主人', '', '', '', '', '']
+    master: ['主人', '小主', '小主人']
 
   phrase_2:
     meta:
@@ -40,7 +40,7 @@ trace_start:
       - ''
     your: ['您的', '您的', '你的']
     assistant: ['助理', '个人助理', '小帮手']
-    sjs: ['随静姝', '静姝', '小姝']
+    sjs: ['随静姝', '静姝', '小姝', '静静', '小静']
 
   phrase_3:
     meta:
@@ -139,7 +139,28 @@ trace_remind_a:  # 适合几十秒的提醒
 trace_remind_s:  # 适合几秒的提醒
   '<count_secs>'
 
+# Interact with Count Down ------------------------------------------------------------------------------------------------------------------
 
+plus_minutes: '加了<change_detail>，还剩<count_detail>'
+minus_minutes: '减了<change_detail>，还剩<count_detail>'
+
+# Interact with Tracer ------------------------------------------------------------------------------------------------------------------
+
+report_tracer: '当前正在追踪的任务为<target_title>'
+next_tracer: '已将当前的任务切换为后面的<target_title>'
+prev_tracer: '已将当前的任务切换为之前的<target_title>'
+random_tracer: '已将当前的任务随机切换为<target_title>'
+clear_tracer: '已将<target_title>的监控时间清零'
+edit_tracer: '打开监控器的配置文件'
+
+# Interact with Bomb ------------------------------------------------------------------------------------------------------------------
+
+report_bomb: '当前选择的炸弹为<bomb_title>'
+next_bomb: '选择了下一个引力炸弹：<bomb_title>'
+prev_bomb: '切换为之前的引力炸弹：<bomb_title>'
+random_bomb: '随机选择了<bomb_title>作为引力炸弹'
+clear_bomb: '已将<bomb_title>的配置冻结'
+edit_bomb: '打开引力炸弹的配置文件'
 
 # Report things --------------------------------------------------------------------------------------------------------
 
