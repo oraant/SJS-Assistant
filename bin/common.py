@@ -66,6 +66,5 @@ def str2str(string):
     return seconds2str(seconds)
 
 # ------ 日志工具 -------------------------------------------------------------------------
-def log(level, msg):
-    # logging.log(level, msg)
-    pass
+def log(msg, level):
+    logging.log(level, msg)
