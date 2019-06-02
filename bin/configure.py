@@ -50,13 +50,13 @@ class Configuration():
 # 针对列表的配置类，提供了开关、权重、随机抽取等功能
 class WeightList(Configuration):
 
-    pick = ""
+    picked = []
 
     # 从配置表中，按照一定规则，随机抽取一部分内容
-    def pick_item(self, samples=1, weight=True, switch=True):
+    def pick_items(self, samples=3, weight=True, switch=True):
         self.load_config()
 
-        temp = []
+        self.picked = []
 
         for item in self.configuration:
             name, count, active = item, self.configuration[item]["count"], self.configuration[item]["active"]
@@ -67,14 +67,16 @@ class WeightList(Configuration):
             else: count = 1
 
             for i in range(count):  # 按照权重往临时表里增加内容
-                temp.append(name)
+                self.picked.append(self.configuration[name])
 
-        common.log(10, temp)
-        return sample(temp, samples)
+        return sample(self.picked, samples)
+
+    def pick_item(self):
+        return self.pick_items(samples=1)[0]
 
     def repeat_pick(self):
-        if self.pick:
-            return self.pick
+        if self.picked:
+            return self.picked
         else:
             return "刚刚没有选则炸弹，如何重复呢"
 
