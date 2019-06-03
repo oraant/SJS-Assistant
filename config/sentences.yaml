@@ -1,7 +1,7 @@
 # 语法：
 #
 # 一，对于普通的语句，可以直接填写字符串
-#    若包含外部的变量，需要用<>包裹，而非{}，并尽量以注释方式在下方的键值对中表示一下  # todo: 这里需要修改sentence.py代码，并把这个功能转移到configure.py中
+#    若包含外部的变量，需要用<>包裹，而非{}，并尽量以注释方式在下方的键值对中表示一下
 #
 # 二，对于随机选择的语句，可以使用列表填写所有选项
 #    若要设置各项权重，只需要将相关的内容多重复几次，就会增大其概率
@@ -10,8 +10,6 @@
 #    使用嵌套方式，可以保证独立的命名空间，这意味着可以有重复的键名
 #    嵌套的识别方式为：包含”meta: xxx“的字典
 #
-# list to copy: ['', '', '', '', '', '']
-
 
 # Using preset ---------------------------------------------------------------------------------------------------------
 
@@ -30,7 +28,7 @@ trace_start:
   phrase_1:
     meta:
       - '{master}'
-    master: ['主人', '小主', '小主人']
+    master: [主人, 小主, 小主人]
 
   phrase_2:
     meta:
@@ -38,43 +36,43 @@ trace_start:
       - '{assistant}{sjs}'
       - '{sjs}'
       - ''
-    your: ['您的', '您的', '你的']
-    assistant: ['助理', '个人助理', '小帮手']
-    sjs: ['随静姝', '静姝', '小姝', '静静', '小静']
+    your: [您的, 您的, 你的]
+    assistant: [助理, 个人助理, 小帮手]
+    sjs: [随静姝, 静姝, 小姝, 静静, 小静]
 
   phrase_3:
     meta:
       - '{detected}{you}{are}<target_playing><target_title>{aux}'
-    detected: ['发现', '检测到', '看到', '发现了']
-    you: ['您', '您', '您', '您', '您', '您', '您', '你']
-    are: ['正在', '想要', '打算', '计划', '正', '开始', '想', '正想', '已经', '在']
+    detected: [发现, 检测到, 看到, 发现了]
+    you: [您, 您, 您, 您, 您, 您, 您, 你]
+    are: [正在, 想要, 打算, 计划, 正, 开始, 想, 正想, 已经, 在]
     # playing: 玩
     # title: 守望先锋
-    aux: ['了', '了呢', '了哦', '啦', '喽', '', '', '', '', '', '']
+    aux: [了, 了呢, 了哦, 啦, 喽, '', '', '', '', '', '']
 
   phrase_4:
     meta:
       - '{already}{helped}{install}{ed}{a}<count_detail>的{counter}'
       - '{already}{helped}把<count_detail>的{counter}{install}{ed}'
       - '{already}{helped}把{counter}的时间{install}{to}<count_detail>'
-    already: ['已经', '自动', '所以', '已', '于是', '就']
+    already: [已经, 自动, 所以, 已, 于是, 就]
     helped:
       meta:
         - '{helped}{you}'
         - ''
-      helped: ['帮', '为', '给']
-      you: ['你', '您']
-    install: ['设置', '规划', '调整', '创建', '建立', '设立', '设定']
-    ed: ['了', '好了']
-    a: ['一个', '']
+      helped: [帮, 为, 给]
+      you: [你, 您]
+    install: [设置, 规划, 调整, 创建, 建立, 设立, 设定]
+    ed: [了, 好了]
+    a: [一个, ]
     # minutes: 30分钟
-    counter: ['计时器', '倒计时']
+    counter: [计时器, 倒计时]
     to:
       meta:
         - '{to}{ed}'
         - '{to}'
-      to: ['为', '到', '至', '成']
-      ed: ['了']
+      to: [为, 到, 至, 成]
+      ed: [了]
 
 
   phrase_5:
@@ -83,91 +81,94 @@ trace_start:
       - '{and}{choose}{bomb_phrase}{as}{your}{bomb}'
       - '{and}{planing}{choose}{bomb_phrase}来{attract}{you}'
       - '{and}{suggest}{you}{after}{bomb_phrase}'
-    and: ['并', '并且', '然后', '还']
-    let: ['把', '将']
-    bomb: ['引力炸弹', '完成目标', '下一目标', '炸弹', '引力']
-    set: ['设置', '调整']
-    to: ['成', '成了', '为']
+    and: [并, 并且, 然后, 还]
+    let: [把, 将]
+    bomb: [引力炸弹, 完成目标, 下一目标, 炸弹, 引力]
+    set: [设置, 调整]
+    to: [成, 成了, 为]
     bomb_phrase:
       meta:
-        - '<bomb_playing><bomb_title>'
-        - '<bomb_playing><bomb_playing><bomb_title>'
-        - '<bomb_playing>一<bomb_playing><bomb_title>'
-        - '<bomb_playing>一会<bomb_title>'
+        - <bomb_playing><bomb_title>
+        - <bomb_playing><bomb_playing><bomb_title>
+        - <bomb_playing>一<bomb_playing><bomb_title>
+        - <bomb_playing>一会<bomb_title>
     choose:
       meta:
         - '{choose}{ed}'
         - '{choose}'
-      choose: ['选择', '挑选', '挑中', '选', '挑', '使用', '用']
-      ed: ['了', '了', '了', '']
-    as: ['做为', '成为', '当做', '当成']
-    your: ['您的', '你的', '']
-    planing: ['建议', '推荐', '打算', '正要', '']
-    suggest: ['建议', '推荐']
-    attract: ['吸引', '拉出', '拽出']
-    you: ['你', '您']
-    after: ['过会', '过一会', '等会', '等一会', '最后', '在最后']
+        - '{use}'
+      choose: [选择, 挑选, 挑中, 选, 挑, ]
+      use: [使用, 用]
+      ed: [了, 了, 了, ]
+    as: [做为, 成为, 当做, 当成]
+    your: [您的, 你的, ]
+    planing: [建议, 推荐, 打算, 正要, ]
+    suggest: [建议, 推荐]
+    attract: [吸引, 拉出, 拽出]
+    you: [你, 您]
+    after: [过会, 过一会, 等会, 等一会, 最后, 在最后]
 
 
 
 
 trace_stop:
-  - '检测到您关闭了<target_title>，虽然还有<count_detail>，但静姝自动为您取消了提醒，如果您想，现在就可以去<bomb_playing><bomb_title>啦，<trace_gap>后会重新开始监控哦'
-  - '您<target_playing><target_title>共花了<elapsed_detail>，现在就可以去<bomb_playing><bomb_title>啦，<trace_gap>后会重新开始监控哦'
+  - 检测到您关闭了<target_title>，虽然还有<count_detail>，但静姝自动为您取消了提醒，如果您想，现在就可以去<bomb_playing><bomb_title>啦，<trace_gap>后会重新开始监控哦
+  - 您<target_playing><target_title>共花了<elapsed_detail>，现在就可以去<bomb_playing><bomb_title>啦，<trace_gap>后会重新开始监控哦
 
-trace_finish: '时间到喽，您玩<target_title>已经<elapsed_detail>了，现在该去<bomb_playing><bomb_title>啦，<trace_gap>后会重新开始监控哦'
+trace_abort: 您终止了对<target_title>的监控，节省了<count_detail>，共花费了<elapsed_detail>。现在您可以开心的去<bomb_playing><bomb_title>了，<trace_gap>后会重新开始监控哦
+  
+trace_finish: 时间到喽，您玩<target_title>已经<elapsed_detail>了，现在该去<bomb_playing><bomb_title>啦，<trace_gap>后会重新开始监控哦
 
 
 # Remind thins ---------------------------------------------------------------------------------------------------------
 
-trace_remind_d:  # 适合几小时的提醒
-  'D: <bomb_playing><bomb_title>这种事，主人真的喜欢吗，再等<count_detail>吧'
 
-trace_remind_c:  # 适合几十分钟的提醒
-  'C: 想<bomb_playing><bomb_title>吗？再等<count_detail>就可以啦'
+trace_remind_d: D级：<bomb_playing><bomb_title>这种事，主人真的喜欢吗，再等<count_detail>吧  # 适合几小时的提醒
 
-trace_remind_b:  # 适合几分钟的提醒
-  'B: 好期待哦，还有<count_detail>，就可以<bomb_playing><bomb_title>啦'
+trace_remind_c: C级：想<bomb_playing><bomb_title>吗？再等<count_detail>就可以啦  # 适合几十分钟的提醒
+
+trace_remind_b: B级：好期待哦，还有<count_detail>，就可以<bomb_playing><bomb_title>啦  # 适合几分钟的提醒
 
 trace_remind_a:  # 适合几十秒的提醒
   meta:
-    - '只{have}<count_detail>{end}'
-    - '还{have}<count_detail>'
-  have: ['有', '剩',]
-  end: ['了', '喽', '了呢']
+    - 只{have}<count_detail>{end}
+    - 还{have}<count_detail>
+  have: [有, 剩,]
+  end: [了, 喽, 了呢]
 
-trace_remind_s:  # 适合几秒的提醒
-  '<count_secs>'
+trace_remind_s: <count_secs>  # 适合几秒的提醒
+
 
 # Interact with Count Down ------------------------------------------------------------------------------------------------------------------
 
-plus_minutes: '加了<change_detail>，还剩<count_detail>'
-minus_minutes: '减了<change_detail>，还剩<count_detail>'
+plus_minutes: 加了<change_detail>，还剩<count_detail>
+minus_minutes: 减了<change_detail>，还剩<count_detail>
 
 # Interact with Tracer ------------------------------------------------------------------------------------------------------------------
 
-report_tracer: '当前正在追踪的任务为<target_title>'
-next_tracer: '已将当前的任务切换为后面的<target_title>'
-prev_tracer: '已将当前的任务切换为之前的<target_title>'
-random_tracer: '已将当前的任务随机切换为<target_title>'
-clear_tracer: '已将<target_title>的监控时间清零'
-edit_tracer: '打开监控器的配置文件'
+report_tracer_empty: 当前没有活跃的追踪任务
+report_tracer: 正在操作<target_title>
+next_tracer: 操作后面的<target_title>
+prev_tracer: 操作之前的<target_title>
+random_tracer: 操作随机的<target_title>
+clear_tracer: 中断了<target_title>的追踪任务
+edit_tracer: 打开监控器的配置文件
 
 # Interact with Bomb ------------------------------------------------------------------------------------------------------------------
 
-report_bomb: '当前选择的炸弹为<bomb_title>'
-next_bomb: '选择了下一个引力炸弹：<bomb_title>'
-prev_bomb: '切换为之前的引力炸弹：<bomb_title>'
-random_bomb: '随机选择了<bomb_title>作为引力炸弹'
-clear_bomb: '已将<bomb_title>的配置冻结'
-edit_bomb: '打开引力炸弹的配置文件'
+report_bomb: 当前选择的炸弹为<bomb_title>
+next_bomb: 选择了下一个引力炸弹：<bomb_title>
+prev_bomb: 切换为之前的引力炸弹：<bomb_title>
+random_bomb: 随机选择了<bomb_title>作为引力炸弹
+clear_bomb: 已将<bomb_title>的配置冻结
+edit_bomb: 打开引力炸弹的配置文件
 
 # Report things --------------------------------------------------------------------------------------------------------
 
-report_mission: '当前任务是：<mission>'
-report_lastest: '我刚才说的是：<lastest>'
-report_minutes: '当前时间是：<minutes>'
-report_systime: '当前时间是：<systime>'
+report_mission: 当前任务是：<mission>
+report_lastest: 我刚才说的是：<lastest>
+report_minutes: 当前时间是：<minutes>
+report_systime: 当前时间是：<systime>
 
 
 

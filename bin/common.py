@@ -43,7 +43,7 @@ def str2seconds(string):
     elif suffix == "s":
         num = num
     else:
-        raise ValueError
+        raise ValueError("Suffix Error: %s" % (string))
 
     if num < 0:
         num = 0
@@ -59,7 +59,7 @@ def seconds2str(number):
     elif number >= 0:
         return "%.1f" % (number) + "秒"
     else:
-        raise ValueError
+        raise ValueError("number < 0, number: %s" % (number))
 
 def str2str(string):
     seconds = str2seconds(string)
@@ -68,3 +68,30 @@ def str2str(string):
 # ------ 日志工具 -------------------------------------------------------------------------
 def log(level, msg):
     logging.log(level, msg)
+
+# ------ 字典工具 -------------------------------------------------------------------------
+def search_index(dict, key):
+    cur, next, prev = 0, 0, 0
+
+    if key not in dict.keys():
+        log(40, '字典中没有这个键。dict.keys(): %s  key: %s' % (dict.keys(), key))
+        return (0, 0, 0)
+
+    max = len(dict.keys())
+    if max <= 1: return (0, 0, 0)
+
+    for tmp_key in dict.keys():
+        if tmp_key == key: break
+        cur += 1
+
+    if (cur == max - 1):
+        next = 0
+    else:
+        next = cur + 1
+
+    if (cur == 0):
+        prev = max - 1
+    else:
+        prev = cur - 1
+
+    return (prev, cur, next)

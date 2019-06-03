@@ -36,43 +36,10 @@ class Configuration():
         self.configuration = config
         self.save_config()
 
-
     # 查找配置表中有无某一项
     def search_item(self, item):
         self.load_config()
-        if item in self.configuration.keys():
-            return True
-        else:
-            return False
-
-    # 查找某一项的下标，以及其前后各项的下标
-    def search_index(self, item):
-
-        self.load_config()
-        cur, next, prev = 0, 0, 0
-
-        if not self.search_item(item):
-            common.log(40, '发现了一个不在配置文件中的项目。可能是因为配置文件被修改过的原因')
-            return (0, 0, 0)
-
-        max = len(self.configuration.keys())
-        if max <= 1: return (0, 0, 0)
-
-        for key in self.configuration.keys():
-            if item == key: break
-            cur += 1
-
-        if (cur == max - 1):
-            next = 0
-        else:
-            next = cur + 1
-
-        if (cur == 0):
-            prev = max - 1
-        else:
-            prev = cur - 1
-
-        return (prev, cur, next)
+        return item in self.configuration.keys()
 
 
 # 针对列表的配置类，提供了开关、权重、随机抽取等功能
@@ -83,8 +50,20 @@ class WeightList(Configuration):
     # ----------------------------------------------
     # 从配置表中，按照一定规则，随机抽取一部分内容
 
-    def pick_items(self, samples=3, weight=True, switch=True):
+    def check_active(self):
         self.load_config()
+        for key in self.configuration.keys():
+            if self.configuration[key]['active']:
+                return True
+        return False
+
+    def pick_items(self, samples=3, weight=True, switch=True):
+        if not self.check_active():
+            common.log(40, "该配置文件中没有活跃的配置：配置文件:%s" % (self.filename))
+            return
+
+        if samples > len(self.configuration.keys()):
+            samples = len(self.configuration.keys())
 
         tmp = []
 
@@ -99,7 +78,6 @@ class WeightList(Configuration):
             for i in range(count):  # 按照权重往临时表里增加内容
                 tmp.append(name)
 
-        if not tmp: common.log(40, "该配置文件中没有活跃的配置：配置文件:%s" % (self.filename))
         return sample(tmp, samples)
 
     def pick_item(self):
@@ -108,13 +86,16 @@ class WeightList(Configuration):
         return self.picked_key
 
     def pick_next(self):
-        self.load_config()
+        if not self.check_active():
+            common.log(40, "该配置文件中没有活跃的配置：配置文件:%s" % (self.filename))
+            return
+
         if not self.picked_key: self.pick_item()
         self.cut_weight(self.picked_key)
 
         picked_key = self.picked_key
         while True:
-            prev, cur, next = self.search_index(picked_key)
+            prev, cur, next = common.search_index(self.configuration, picked_key)
             picked_key = list(self.configuration.keys())[next]
             if self.configuration[picked_key]['active']: break
 
@@ -123,13 +104,16 @@ class WeightList(Configuration):
         return self.picked_key
 
     def pick_prev(self):
-        self.load_config()
+        if not self.check_active():
+            common.log(40, "该配置文件中没有活跃的配置：配置文件:%s" % (self.filename))
+            return
+
         if not self.picked_key: self.pick_item()
         self.cut_weight(self.picked_key)
 
         picked_key = self.picked_key
         while True:
-            prev, cur, next = self.search_index(picked_key)
+            prev, cur, next = common.search_index(self.configuration, picked_key)
             picked_key = list(self.configuration.keys())[prev]
             if self.configuration[picked_key]['active']: break
 
@@ -143,7 +127,10 @@ class WeightList(Configuration):
         else:
             return "刚刚没有选则炸弹，如何重复呢"
 
-    # 改变某一项的权重，并保存至文件
+
+    # ----------------------------------------------
+    # 操作某一项的权重
+
     def get_weight(self, item):
         self.load_config()
         return self.configuration[item]["count"]
@@ -161,8 +148,9 @@ class WeightList(Configuration):
         current_count = self.configuration[item]["count"]
         self.set_weight(item, current_count-change)
 
+    # ----------------------------------------------
+    # 操作某一项的开关
 
-    # 改变某一项的激活，并保存至文件（若已相同，则不再改变）
     def get_switch(self, item):
         self.load_config()
         return self.configuration[item]["active"]
@@ -280,7 +268,7 @@ class Words(WeightList):
         super().__init__(common.words_file)
 
 # 针对监控对象的配置类
-class Targets(Expression):
+class Targets(WeightList, Expression):
 
     def __init__(self):
         common.log(10, common.targets_file)

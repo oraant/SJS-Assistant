@@ -8,7 +8,7 @@ def _get_sentence():
     res = requests.get('https://v1.hitokoto.cn/?encode=text')
 
     if "status" in res.text:
-        raise ConnectionError
+        raise ConnectionError('从“一言”获取内容时，联网失败了')
 
     return(res.text)
 
@@ -22,7 +22,7 @@ def _get_joke():
 
     res = requests.get('http://v.juhe.cn/joke/randJoke.php?key=d0804bdbf991a1faf5b97a9223f9ee15').json()
     if res['error_code'] != 0:
-        raise ConnectionError
+        raise ConnectionError('从“聚合”获取内容时，联网失败了')
 
     for joke in res['result']:
         _jokes.put(joke['content'])

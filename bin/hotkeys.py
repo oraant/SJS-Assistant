@@ -60,7 +60,7 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
         self.mapping(mod, key, func)
 
     def delete_callback(self, mod, key):
-        self.mapping(mod, key, self.f)
+        self.mapping(mod, key, None)
 
     # ------------------------------------------------------------------------------------------------------------------
 
@@ -104,4 +104,7 @@ def listen():
     hk.start()
 
 def register(mod, key, func):
-    hk.mapping(mod, key, func)
+    hk.insert_callback(mod, key, func)
+
+def cancel(mod, key):
+    hk.delete_callback(mod, key)
