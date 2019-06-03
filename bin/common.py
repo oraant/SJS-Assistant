@@ -22,11 +22,10 @@ cur_path = os.path.abspath(os.path.dirname(__file__))
 root_path = cur_path[:cur_path.find(project_name)+len(project_name)]
 
 def file_path(x): return os.path.join(root_path, x)
-bombs_file = file_path('config\\bombs.yaml')
-words_file = file_path('config\\words.yaml')
-targets_file = file_path('config\\targets.yaml')
 sentences_file = file_path('config\\sentences.yaml')
-logs_file = file_path('log\\debug.log')
+targets_file = file_path('config\\targets.yaml')
+bombs_file = file_path('config\\bombs.yaml')
+log_file = file_path('log\\debug.log')
 
 # ------ 时间工具 -------------------------------------------------------------------------
 

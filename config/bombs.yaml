@@ -12,14 +12,14 @@
   <bomb_title>: 飞镖
 读书:
   active: true
-  count: 5
+  count: 0
   <bomb_playing>: [读, 看, 阅览, 阅读]
   <bomb_title>: 书
 下载几本杂志:
   <bomb_playing>: [下载, 下]
   <bomb_title>: 杂志
   active: true
-  count: 7
+  count: 0
 
 # 低频的备选选项：
 

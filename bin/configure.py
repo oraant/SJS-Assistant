@@ -260,13 +260,6 @@ class Bombs(WeightList, Expression):
         common.log(10, common.bombs_file)
         super().__init__(common.bombs_file)
 
-# 针对报时列表的配置类
-class Words(WeightList):
-
-    def __init__(self):
-        common.log(10, common.words_file)
-        super().__init__(common.words_file)
-
 # 针对监控对象的配置类
 class Targets(WeightList, Expression):
 

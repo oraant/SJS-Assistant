@@ -123,11 +123,31 @@ trace_finish: 时间到喽，您玩<target_title>已经<elapsed_detail>了，现
 # Remind thins ---------------------------------------------------------------------------------------------------------
 
 
-trace_remind_d: D级：<bomb_playing><bomb_title>这种事，主人真的喜欢吗，再等<count_detail>吧  # 适合几小时的提醒
+trace_remind_d:  # 适合几小时的提醒
+  - 主人在上：距离<bomb_playing><bomb_title>还有<count_detail>哦
+  - 主人主人，偷偷告诉你，还有<count_detail>，就可以<bomb_playing><bomb_title>啦
+  - 主人您已经决定<bomb_playing><bomb_title>了吗，只剩<count_detail>了呢
+  - 主人？主人？您在听吗？离<bomb_playing><bomb_title>了还有<count_detail>哦
+  - 主人！主人！离<bomb_playing><bomb_title>了还有<count_detail>哦！
 
-trace_remind_c: C级：想<bomb_playing><bomb_title>吗？再等<count_detail>就可以啦  # 适合几十分钟的提醒
+trace_remind_c:  # 适合几十分钟的提醒
+  - 好期待哦，还有<count_detail>，就可以<bomb_playing><bomb_title>啦
+  - 好开心啊，还有<count_detail>，就可以<bomb_playing><bomb_title>啦
+  - 当当当，还有<count_detail>，就可以<bomb_playing><bomb_title>啦，开心吗
+  - 加油哦，还有<count_detail>，就可以<bomb_playing><bomb_title>啦，开心吗
+  - 还有<count_detail>，就要<bomb_playing><bomb_title>啦，主人等不及了吗
+  - 还有<count_detail>，就可以<bomb_playing><bomb_title>啦，主人开心吗
+  - 笨笨的静姝提醒您，还有<count_detail>，就可以<bomb_playing><bomb_title>喽
+  - 随静姝又来啦，还有<count_detail>，就可以<bomb_playing><bomb_title>喽
+  - 再等<count_detail>，就要<bomb_playing><bomb_title>了哦
+  - <count_detail>后，主人就要<bomb_playing><bomb_title>了呢，静姝舍不得您走呀
 
-trace_remind_b: B级：好期待哦，还有<count_detail>，就可以<bomb_playing><bomb_title>啦  # 适合几分钟的提醒
+trace_remind_b:  # 适合几分钟的提醒
+  - 您喜欢<bomb_playing><bomb_title>吗？还有<count_detail>哦
+  - 想<bomb_playing><bomb_title>吗？再等<count_detail>就可以啦
+  - 想<bomb_playing><bomb_title>还得再等<count_detail>哦，静姝跟您一起等哦
+  - <bomb_playing><bomb_title>喽，可惜还得再等<count_detail>哦，小姝也想试试呢
+  - <bomb_playing><bomb_title>这种事，主人真的喜欢吗，再等<count_detail>吧
 
 trace_remind_a:  # 适合几十秒的提醒
   meta:
