@@ -18,11 +18,23 @@
 | Key \ Modifier  | Win -- App               | Shift -- Counter           | Ctrl -- Tracer            | Alt -- Bomb             |
 |-----------------|--------------------------|----------------------------|---------------------------|-------------------------|
 | "." -- Report   | Report last APP & Sound  | Report current Counter     | Report current Tracer     | Report current Bomb     |
-| "+" -- Next     |                          | Switch to next Counter     | Switch to next Tracer     | Switch to next Bomb     |
-| "-" -- Previous |                          | Switch to previous Counter | Switch to previous Tracer | Switch to previous Bomb |
+| "+" -- Next     | ~~Windows magnifying lens~~ | Switch to next Counter     | Switch to next Tracer     | Switch to next Bomb     |
+| "-" -- Previous | ~~Windows magnifying lens~~ | Switch to previous Counter | Switch to previous Tracer | Switch to previous Bomb |
 | "*" -- Random   | Run a random APP         | Switch to random Counter   | Switch to random Tracer   | Switch to random Bomb   |
 | "/" -- Clear    |                          | Shutdown current Counter   | Shutdown current Tracer   | Deactive current Bomb   |
-| "↵" -- Edit     | Edit Voice configuration | Edit Preset configuration  | Edit Target configuration | Edit Bomb configuration |
+| "↵" -- Edit     | ~~Windows Can't Register~~ | ~~Edit Preset configuration~~  | Edit Target configuration | Edit Bomb configuration |
 
+
+## 未来的交互
+
+| Key \ Modifier  | Win -- App                  | Shift -- Counter                     | Ctrl -- Tracer                                                          | Alt -- Bomb                                                           | Number 0~9      |
+|-----------------|-----------------------------|--------------------------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------------|-----------------|
+| "." -- Report   | Report last APP & Sound     | Report current Counter               | Report current Tracer                                                   | Report current Bomb                                                   |                 |
+| "+" -- Next     | ~~Windows magnifying lens~~ | Switch to next Counter               | Switch to next Tracer                                                   | Switch to next Bomb                                                   | Plus n minutes  |
+| "-" -- Previous | ~~Windows magnifying lens~~ | Switch to previous Counter           | Switch to previous Tracer                                               | Switch to previous Bomb                                               | Minus n minutes |
+| "*" -- Random   | Run a random APP            | Switch to random Counter             | Switch to random Tracer                                                 | Switch to random Bomb                                                 | Plus n hours    |
+| "/" -- Clear    |                             | Shutdown current Counter             | Shutdown current Tracer                                                 | Deactive current Bomb                                                 | Minus n hours   |
+| "↵" -- Edit     | ~~Windows Can't Register~~  | ~~Edit Preset configuration~~        | Edit Target configuration                                               | Edit Bomb configuration                                               |                 |
+| Number 0~9      | Open n's APP                | 打开编号为n的预设 一般用来打开计时器 | 选择编号为n的追踪器： 在配置中为常用追踪器编号 若该编号的不活跃，则报告 | 选择编号为n的炸弹： 在配置中为常用的炸弹编号 若该编号的不活跃，则报告 |                 |
 
 > Table edited with [Tables Generator](http://www.tablesgenerator.com/markdown_tables)

@@ -78,7 +78,7 @@ class Tracer(threading.Thread):
                         if self.check_punish():
                             self.trace_punish()
                         elif self.check_punished():
-                            self.trace_finally()  # todo: 增加这个功能
+                            self.trace_finally()
                             break
                         else:
                             break
@@ -94,7 +94,7 @@ class Tracer(threading.Thread):
     def trace_welcome(self):  # 线程开始
         common.log(10, '开始监控' + self.target_name)
 
-    def trace_prepare(self):  # 刷新监控目标的各样配置 todo: 初始化变量改到了这里
+    def trace_prepare(self):  # 刷新监控目标的各样配置
         self.target_conf = self.targets_conf.configuration[self.target_name]
         self.frequency = common.str2seconds(self.target_conf['frequency'])  # 监控关键词的频率，防止秒开秒关的情况
         self.trace_gap = common.str2seconds(self.target_conf['trace_gap'])  # 追踪完成后，间隔多少秒重新开始监控
@@ -102,7 +102,7 @@ class Tracer(threading.Thread):
         self.start_lag = common.str2seconds(self.target_conf['start_lag'])  # 监控到目标时的延迟活跃时间，防止秒开秒关的情况
         self.stop_lag = common.str2seconds(self.target_conf['stop_lag'])  # 监控到目标停止后的延迟休息时间，防止秒关秒开的情况
 
-    def trace_start(self):   # todo: 可以在这里把权重加进去
+    def trace_start(self):
         self.running = True
         self.shutdown = False
         self.abort = False
@@ -217,7 +217,7 @@ class Tracer(threading.Thread):
         second_check = (self.target_name in titles) and (not self.running)
         return second_check
 
-    def check_stop(self):  # todo: 测试启动延时、终止延时
+    def check_stop(self):
         titles = windows.fetch_windows_titles()
         first_check = (self.target_name not in titles) and (self.running)
         if not first_check: return False
@@ -377,6 +377,9 @@ class Tracer(threading.Thread):
     def shutdown_tracer(self):  # 正在追踪中的任务不会被shutdown，只会停止那些还未追踪的监控任务，或已追踪结束的监控任务
         self.shutdown = True
 
+    # -----------------------------------
+    def ________________________(_): pass
+
 class SuperVisor():
 
     # todo: 同时检测到多个目标时，会说一个相同的内容
@@ -419,7 +422,8 @@ class SuperVisor():
 
             time.sleep(self.gap)
 
-    # ------------------------------------------------------------------------------------------------------------------
+    # -----------------------------------
+    def __________________basic(_): pass
 
     def pick_tracer(self):
 
@@ -473,7 +477,8 @@ class SuperVisor():
         for (mod, key, func) in maps:
             hotkeys.register(mod, key, func)
 
-    # ------------------------------------------------------------------------------------------------------------------
+    # -----------------------------------
+    def __________________tracer(_): pass
 
     def report_tracer(self):
         if self.picked: self.speak('report_tracer')
@@ -534,6 +539,9 @@ class SuperVisor():
     def edit_tracer(self):
         webbrowser.open(common.targets_file)
         self.speak('edit_tracer')
+
+    # -----------------------------------
+    def ________________________(_): pass
 
 def run():
     sv = SuperVisor()

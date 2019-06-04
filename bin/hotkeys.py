@@ -18,8 +18,8 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
         106:[MOD_WIN, VK_NUMPAD6, None], 107:[MOD_WIN, VK_NUMPAD7, None], 108:[MOD_WIN, VK_NUMPAD8, None],
         109:[MOD_WIN, VK_NUMPAD9, None],
 
-        110:[MOD_WIN, VK_DECIMAL, None], 111:[MOD_WIN, VK_ADD, None], 112:[MOD_WIN, VK_SUBTRACT, None],
-        113:[MOD_WIN, VK_MULTIPLY, None], 114:[MOD_WIN, VK_DIVIDE, None], 115:[MOD_WIN, VK_RETURN, None],
+        # 110:[MOD_WIN, VK_DECIMAL, None], 111:[MOD_WIN, VK_ADD, None], 115:[MOD_WIN, VK_RETURN, None],
+        113:[MOD_WIN, VK_MULTIPLY, None], 114:[MOD_WIN, VK_DIVIDE, None], 112:[MOD_WIN, VK_SUBTRACT, None],
 
         # Shift
         200: [MOD_SHIFT, VK_NUMPAD0, None], 201: [MOD_SHIFT, VK_NUMPAD1, None], 202: [MOD_SHIFT, VK_NUMPAD2, None],
@@ -28,7 +28,7 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
         209: [MOD_SHIFT, VK_NUMPAD9, None],
 
         210: [MOD_SHIFT, VK_DECIMAL, None], 211: [MOD_SHIFT, VK_ADD, None], 212: [MOD_SHIFT, VK_SUBTRACT, None],
-        213: [MOD_SHIFT, VK_MULTIPLY, None], 214: [MOD_SHIFT, VK_DIVIDE, None], 215: [MOD_SHIFT, VK_RETURN, None],
+        213: [MOD_SHIFT, VK_MULTIPLY, None], 214: [MOD_SHIFT, VK_DIVIDE, None],  # 215: [MOD_SHIFT, VK_RETURN, None],
 
         # Control
         300: [MOD_CONTROL, VK_NUMPAD0, None], 301: [MOD_CONTROL, VK_NUMPAD1, None], 302: [MOD_CONTROL, VK_NUMPAD2, None],
