@@ -116,8 +116,8 @@ trace_stop:
   - 您<target_playing><target_title>共花了<elapsed_detail>，现在就可以去<bomb_playing><bomb_title>啦，<trace_gap>后会重新开始监控哦
 
 trace_abort: 您终止了对<target_title>的监控，节省了<count_detail>，共花费了<elapsed_detail>。现在您可以开心的去<bomb_playing><bomb_title>了，<trace_gap>后会重新开始监控哦
-  
 trace_finish: 时间到喽，您玩<target_title>已经<elapsed_detail>了，现在该去<bomb_playing><bomb_title>啦，<trace_gap>后会重新开始监控哦
+trace_finally: 您可算停下了，一共花了<elapsed_detail>呢！赶紧去<bomb_playing><bomb_title>吧！<trace_gap>后会重新开始监控哦
 
 
 # Remind thins ---------------------------------------------------------------------------------------------------------
@@ -194,8 +194,54 @@ report_systime: 当前时间是：<systime>
 
 # Disturb thins --------------------------------------------------------------------------------------------------------
 
-disturb_d:
-disturb_c:
-disturb_b:
-disturb_a:
-disturb_s:
+trace_punish_d:  # 提醒
+  - 主人，您玩<target_playing><target_title>已经<elapsed_detail>了，该去<bomb_playing><bomb_title>了哦
+  - 主人，说好的<bomb_playing><bomb_title>呢？您说话不算数了吗？
+  - 主人~，别<target_playing><target_title>啦，都到时间啦
+  - 主人，时间到了哦，您该<bomb_playing><bomb_title>了哦
+  - 时间到啦，主人为什么还没有停下来呢
+trace_punish_c:  # 着急
+  - 主人！主人！您怎么还没去<bomb_playing><bomb_title>啊，令人着急
+  - 好着急啊！主人，您该去<bomb_playing><bomb_title>了哦，
+  - 啊呀啊呀！主人，别<target_playing><target_title>啦，该去<bomb_playing><bomb_title>啦，您都快急死我啦
+trace_punish_b:  # 生气
+  - 主人，静姝要生气了哦，您花了<elapsed_detail>用来<target_playing><target_title>，该停下来了哦
+  - 主人，您忘了您想要<bomb_playing><bomb_title>了吗？小姝要生气了哦
+  - <bomb_playing><bomb_title>，<bomb_playing><bomb_title>，<bomb_playing><bomb_title>重要的事情说三遍！生气气！
+  - <bomb_title>！<bomb_title>！<bomb_title>，重要的事情说三遍！生气气！
+trace_punish_a:  # 愤怒
+  - 主人，静姝感觉到有一股怒火在灵魂中升腾。
+  - 主人，已经提醒您这么多遍了，您还是在<target_playing><target_title>，静姝感到很愤怒。
+  - 主人，静姝的怒气值已经满了。
+  - 请您做好准备，静姝要发怒了
+  - 准备好迎接随静姝的怒火吧
+trace_punish_s:  # 爆炸
+  meta:
+    - '{fuck}{aaaaa}{hdfkljaj}{novel}'
+    - '{fuck}{fuck}{aaaaa}{hdfkljaj}{novel}'
+    - '{fuck}{fuck}{fuck}{aaaaa}{hdfkljaj}{novel}'
+    - '{fuck}{fuck}{fuck}{fuck}{aaaaa}{hdfkljaj}{novel}'
+  fuck:
+    - 肏！
+    - 肏你妈！
+    - 干你娘！
+    - 你他妈逼得别给脸不要脸！
+    - 心里没点逼数吗？
+  aaaaa:
+    - 啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！啊！
+    - 额！呕！啊！
+    - 啊啊啊啊啊啊啊啊啊！啊啊啊啊啊啊啊啊啊啊啊啊！啊啊啊啊啊啊啊！啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊！啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊！啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊！
+  hdfkljaj:
+    - 锘挎槬鐪犱笉瑙夋檽锛屽澶勯椈鍟奸笩
+    - 瑕佸嚑娈典贡镰佹枃瀛楋紝鎷垮幓瑁匓
+    - M2ViYThmODMyMDJiNTkyYjC3XWY3YTdlYTIxMxhkNGJmXDI2MWRkMw
+  novel:
+    - 斗之力
+    - 陨落的天才
+    - 萧炎，斗之力，三段！级别：低级！
+    - 要不是族长是他的父亲，这种废物，早就被驱赶出家族，任其自生自灭了，哪还有机会待在家族中白吃白喝
+    - 唉，昔年那名闻乌坦城的天才少年，如今怎么落魄成这般模样了啊
+    - 听着测验人的喊声，一名少女快速的人群中跑出，少女刚刚出场，附近的议论声便是小了许多，一双双略微火热的目光，牢牢的锁定着少女的脸颊…
+    - 四岁练气，十岁拥有九段斗之气，十一岁突破十段斗之气，成功凝聚斗之气旋，一跃成为家族百年之内最年轻的斗者
+    - 三十年河东，三十年河西，莫欺少年穷
+    - 我名为药老，至于我的来历，现在还是先不和你说，免得你分心，你只需要知道，象那什么号称丹王的货色，其实…其实也就是屁罢了

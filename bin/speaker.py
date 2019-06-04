@@ -61,24 +61,20 @@ def get_mp3():
     res = requests.get(common.url, params=data).content
 
 # 拿到数据后，将数据写到临时文件中并播放。播放完成后，将该文件删掉
-def play_mp3():
+def play_mp3(block = False):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
         fp.write(res)
         fp.close()
-        playsound(fp.name, block=False)
+        playsound(fp.name, block)
         os.remove(fp.name)
 
-def get_and_play():
-    get_token()
-    get_mp3()
-    play_mp3()
-
-
 # 对外的说话接口
-def speak(x):
+def speak(x, block = False):
     global words
     words = x
     try:
-        get_and_play()
+        get_token()
+        get_mp3()
+        play_mp3(block)
     except:
         win_speak(x)

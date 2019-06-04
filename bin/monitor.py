@@ -17,6 +17,7 @@ class Tracer(threading.Thread):
     running = False
     shutdown = False
     abort = False
+    punish = 0
 
     count_secs_lock = threading.Semaphore(1)
     count_secs = 0
@@ -36,13 +37,9 @@ class Tracer(threading.Thread):
         self.bombs_conf = configure.Bombs()
 
         self.target_name = target_name
-        self.target_conf = self.targets_conf.configuration[target_name]
-
-        self.frequency = common.str2seconds(self.target_conf['frequency'])  # 监控关键词的频率，防止秒开秒关的情况
-        self.trace_gap = common.str2seconds(self.target_conf['trace_gap'])  # 追踪完成后，间隔多少秒重新开始监控
-        self.start_lag = common.str2seconds(self.target_conf['start_lag'])  # 播放后的延迟启动时间，保证播放完启动语音
-
         self.bomb_name = self.bombs_conf.pick_item()
+
+        self.trace_prepare()
 
         super().__init__()
 
@@ -53,6 +50,8 @@ class Tracer(threading.Thread):
         while True:
             if self.check_shutdown():
                 break
+
+            self.trace_prepare()
 
             if not self.check_start():
                 time.sleep(self.frequency)
@@ -72,7 +71,17 @@ class Tracer(threading.Thread):
                 self.trace_remind()
 
                 if self.check_finish():
+
                     self.trace_finish()
+
+                    while True:
+                        if self.check_punish():
+                            self.trace_punish()
+                        elif self.check_punished():
+                            self.trace_finally()  # todo: 增加这个功能
+                            break
+                        else:
+                            break
                     break
 
                 self.count_down()
@@ -80,29 +89,33 @@ class Tracer(threading.Thread):
         self.trace_shutdown()
 
     # -----------------------------------
+    def __________________trace(_): pass
 
     def trace_welcome(self):  # 线程开始
-        common.log(50, '开始监控' + self.target_name)
-        pass
+        common.log(10, '开始监控' + self.target_name)
 
-    def trace_shutdown(self):  # 线程结束
-        common.log(50, '停止监控' + self.target_name)
-        pass
+    def trace_prepare(self):  # 刷新监控目标的各样配置 todo: 初始化变量改到了这里
+        self.target_conf = self.targets_conf.configuration[self.target_name]
+        self.frequency = common.str2seconds(self.target_conf['frequency'])  # 监控关键词的频率，防止秒开秒关的情况
+        self.trace_gap = common.str2seconds(self.target_conf['trace_gap'])  # 追踪完成后，间隔多少秒重新开始监控
+        self.punish_gap = common.str2seconds(self.target_conf['punish_gap'])  # 追踪完成后，间隔多少秒重新开始监控
+        self.start_lag = common.str2seconds(self.target_conf['start_lag'])  # 监控到目标时的延迟活跃时间，防止秒开秒关的情况
+        self.stop_lag = common.str2seconds(self.target_conf['stop_lag'])  # 监控到目标停止后的延迟休息时间，防止秒关秒开的情况
 
-    def trace_start(self):
-
+    def trace_start(self):   # todo: 可以在这里把权重加进去
         self.running = True
         self.shutdown = False
         self.abort = False
+        self.punish = 0
 
         self.count_secs = common.str2seconds(self.target_conf['count_short'])
         self.elapsed_secs = self.count_secs
 
+        self.targets_conf.add_weight(self.target_name)
+
         self.speak('trace_start', {
             'count_detail': common.seconds2str(self.count_secs)
-        })
-
-        time.sleep(self.start_lag)  # 保证其说完话
+        }, True)
 
     def trace_remind(self):
         for level in self.remind_pattern.keys():
@@ -119,7 +132,7 @@ class Tracer(threading.Thread):
             'count_detail': common.seconds2str(self.count_secs),
             'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
             'trace_gap': common.seconds2str(self.trace_gap),
-        })
+        }, True)
 
         self.running = False
         time.sleep(self.trace_gap)
@@ -140,23 +153,80 @@ class Tracer(threading.Thread):
         self.speak('trace_finish', {
             'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
             'trace_gap': common.seconds2str(self.trace_gap),
-        })
+        }, True)
 
         self.running = False
         time.sleep(self.trace_gap)
 
     def trace_punish(self):
-        pass  # todo
+        self.punish += 1
+        if self.punish < 3:
+            self.speak('trace_punish_d', {
+                'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
+                'trace_gap': common.seconds2str(self.trace_gap),
+            }, True)
+        elif self.punish < 6:
+            self.speak('trace_punish_c', {
+                'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
+                'trace_gap': common.seconds2str(self.trace_gap),
+            }, True)
+        elif self.punish < 9:
+            self.speak('trace_punish_b', {
+                'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
+                'trace_gap': common.seconds2str(self.trace_gap),
+            }, True)
+        elif self.punish < 12:
+            self.speak('trace_punish_a', {
+                'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
+                'trace_gap': common.seconds2str(self.trace_gap),
+            }, True)
+        else:
+            self.speak('trace_punish_s', {
+                'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
+                'trace_gap': common.seconds2str(self.trace_gap),
+            }, True)
+
+        self.elapsed_secs += self.punish_gap
+        time.sleep(self.punish_gap)
+
+    def trace_finally(self):
+
+        self.speak('trace_finally', {
+            'elapsed_detail': common.seconds2str(self.elapsed_secs - self.count_secs),
+            'trace_gap': common.seconds2str(self.trace_gap),
+        }, True)
+
+        self.running = False
+        time.sleep(self.trace_gap)
+
+    def trace_shutdown(self):  # 线程结束
+        common.log(10, '停止监控' + self.target_name)
+
 
     # -----------------------------------
+    def __________________check(_): pass
 
     def check_start(self):
         titles = windows.fetch_windows_titles()
-        return (self.target_name in titles) and (not self.running)
+        first_check = (self.target_name in titles) and (not self.running)
+        if not first_check: return False
 
-    def check_stop(self):
+        time.sleep(self.start_lag)
+
         titles = windows.fetch_windows_titles()
-        return (self.target_name not in titles) and (self.running)
+        second_check = (self.target_name in titles) and (not self.running)
+        return second_check
+
+    def check_stop(self):  # todo: 测试启动延时、终止延时
+        titles = windows.fetch_windows_titles()
+        first_check = (self.target_name not in titles) and (self.running)
+        if not first_check: return False
+
+        time.sleep(self.stop_lag)
+
+        titles = windows.fetch_windows_titles()
+        second_check = (self.target_name not in titles) and (self.running)
+        return second_check
 
     def check_abort(self):
         return self.abort
@@ -165,12 +235,17 @@ class Tracer(threading.Thread):
         return self.count_secs <= 0
 
     def check_punish(self):
-        pass
+        titles = windows.fetch_windows_titles()
+        return (self.target_name in titles) and (self.count_secs <= 0)
+
+    def check_punished(self):
+        return self.punish > 0
 
     def check_shutdown(self):
         return self.shutdown
 
     # -----------------------------------
+    def __________________count(_): pass
 
     def count_safe(func):
         @wraps(func)
@@ -218,6 +293,7 @@ class Tracer(threading.Thread):
         self.count_secs = 0
 
     # -----------------------------------
+    def __________________bomb(_): pass
 
     def report_bomb(self):
         self.speak('report_bomb')
@@ -238,8 +314,9 @@ class Tracer(threading.Thread):
         self.speak('edit_bomb')
 
     # -----------------------------------
+    def __________________public(_): pass
 
-    def speak(self, conf_key, ext_dict = None):
+    def speak(self, conf_key, ext_dict = None, block = False):
         pattern = self.sentences_conf.get_sentence(conf_key)
         target_dict = self.targets_conf.get_package(self.target_name)
         bomb_dict = self.bombs_conf.get_package(self.bomb_name)
@@ -250,7 +327,7 @@ class Tracer(threading.Thread):
         if ext_dict: pattern_dict.update(ext_dict)
 
         formatted = pattern.format(**pattern_dict)
-        speaker.speak(formatted)
+        speaker.speak(formatted, block)
 
     def insert_callbacks(self):
         cp, cm = self.count_plus, self.count_minus
@@ -301,6 +378,10 @@ class Tracer(threading.Thread):
         self.shutdown = True
 
 class SuperVisor():
+
+    # todo: 同时检测到多个目标时，会说一个相同的内容
+    # todo: bombs的计数器，好像增长的有点迅速？
+    # todo: shift + enter的热键，被自己占用了。。。
 
     tracers = {}
     picked = ""
@@ -362,7 +443,7 @@ class SuperVisor():
         self.picked = picked
         self.tracers[self.picked].insert_callbacks()
 
-    def speak(self, conf_key, ext_dict = None):
+    def speak(self, conf_key, ext_dict = None, block = False):
 
         pattern = self.sentences_conf.get_sentence(conf_key)
 
@@ -374,7 +455,7 @@ class SuperVisor():
         if ext_dict: pattern_dict.update(ext_dict)
 
         formatted = pattern.format(**pattern_dict)
-        speaker.speak(formatted)
+        speaker.speak(formatted, block)
 
     def check_running(self):
         for tracer in self.tracers:
@@ -447,8 +528,7 @@ class SuperVisor():
             self.speak('report_tracer_empty')
             return
 
-        self.speak('clear_tracer')
-        time.sleep(3)  # 保证把话说完
+        self.speak('clear_tracer', True)
         self.tracers[self.picked].abort_tracer()
 
     def edit_tracer(self):
