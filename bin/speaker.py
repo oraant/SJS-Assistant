@@ -2,6 +2,7 @@ from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.request import CommonRequest
 from playsound import playsound
 from bin import common
+from threading import Semaphore
 import win32com.client
 import tempfile
 import requests
@@ -17,6 +18,7 @@ words = ""
 expire_time = 0
 token = ""
 res = b""
+speak_lock = Semaphore(1)
 
 
 # 获取阿里云人工智能语音交互应用的Token。插一句嘴，这是我目前见过的最自然、最悦耳、最甜美、最流畅的TTS服务，关键还是免费的！
@@ -71,6 +73,7 @@ def play_mp3(block = False):
 # 对外的说话接口
 def speak(x, block = False):
     global words
+    speak_lock.acquire()
     words = x
     try:
         get_token()
@@ -78,3 +81,5 @@ def speak(x, block = False):
         play_mp3(block)
     except:
         win_speak(x)
+    finally:
+        speak_lock.release()

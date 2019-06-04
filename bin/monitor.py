@@ -37,7 +37,6 @@ class Tracer(threading.Thread):
         self.bombs_conf = configure.Bombs()
 
         self.target_name = target_name
-        self.bomb_name = self.bombs_conf.pick_item()
 
         self.trace_prepare()
 
@@ -103,6 +102,7 @@ class Tracer(threading.Thread):
         self.stop_lag = common.str2seconds(self.target_conf['stop_lag'])  # 监控到目标停止后的延迟休息时间，防止秒关秒开的情况
 
     def trace_start(self):
+        self.bomb_name = self.bombs_conf.pick_item()
         self.running = True
         self.shutdown = False
         self.abort = False
@@ -381,10 +381,6 @@ class Tracer(threading.Thread):
     def ________________________(_): pass
 
 class SuperVisor():
-
-    # todo: 同时检测到多个目标时，会说一个相同的内容
-    # todo: bombs的计数器，好像增长的有点迅速？
-    # todo: shift + enter的热键，被自己占用了。。。
 
     tracers = {}
     picked = ""
