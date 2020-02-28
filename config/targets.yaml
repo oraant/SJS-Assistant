@@ -17,7 +17,7 @@
   count: 0
 
   frequency: 1s
-  count_short: 25m
+  count_short: 21m
 
   trace_gap: 30s
   punish_gap: 30s
@@ -39,17 +39,27 @@
 守望先锋:
   <target_title>: [守望先锋, 守望先锋, 守望先锋, 守望, 守望游戏]
   <<: *game
+  count: 71
 逆水寒:
   <target_title>: [逆水寒, 逆水寒, 逆水寒, 逆水寒, 逆水寒, 网易的逆水寒, 逆水寒网游, 网游逆水寒]
   <<: *game
+  count: 2
+ARK:
+  <target_title>: [方舟, 方舟：进化生存]
+  <<: *game
+  count: 18
 
 知乎:
   <target_title>: [知乎, 知乎, 知乎, 知乎, 知乎, 知乎, 逼乎, 问答社区, 破乎, 小破乎, 贵乎]
   <<: *website
+  count: 16
 哔哩哔哩:
   <target_title>: [B站, B站, B站, B站, B站, 哔哩哔哩, 小破站, bilibili]
   <<: *website
+  count: 15
 
 小说:
   <target_title>: [小说, 闲书, 杂书]
   <<: *novel
+  count: 12
+  count_short: 4h

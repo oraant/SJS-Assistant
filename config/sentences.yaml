@@ -212,15 +212,15 @@ trace_punish_b:  # 生气
 trace_punish_a:  # 愤怒
   - 主人，静姝感觉到有一股怒火在灵魂中升腾。
   - 主人，已经提醒您这么多遍了，您还是在<target_playing><target_title>，静姝感到很愤怒。
-  - 主人，静姝的怒气值已经满了。
+  - 主人，<elapsed_detail>了，静姝的怒气值已经满了。
   - 请您做好准备，静姝要发怒了
-  - 准备好迎接随静姝的怒火吧
+  - 已经<elapsed_detail>了！准备好迎接随静姝的怒火吧！
 trace_punish_s:  # 爆炸
   meta:
-    - '{fuck}{aaaaa}{hdfkljaj}{novel}'
-    - '{fuck}{fuck}{aaaaa}{hdfkljaj}{novel}'
-    - '{fuck}{fuck}{fuck}{aaaaa}{hdfkljaj}{novel}'
-    - '{fuck}{fuck}{fuck}{fuck}{aaaaa}{hdfkljaj}{novel}'
+    - '{fuck}{bomb}{aaaaa}{hdfkljaj}{novel}'
+    - '{fuck}{fuck}<elapsed_detail>{aaaaa}{hdfkljaj}{novel}'
+    - '{fuck}{fuck}{fuck}{aaaaa}{hdfkljaj}<elapsed_detail>{novel}'
+    - '{fuck}{fuck}{bomb}{fuck}{fuck}{aaaaa}{hdfkljaj}{novel}'
   fuck:
     - 肏！
     - 肏你妈！
@@ -245,3 +245,4 @@ trace_punish_s:  # 爆炸
     - 四岁练气，十岁拥有九段斗之气，十一岁突破十段斗之气，成功凝聚斗之气旋，一跃成为家族百年之内最年轻的斗者
     - 三十年河东，三十年河西，莫欺少年穷
     - 我名为药老，至于我的来历，现在还是先不和你说，免得你分心，你只需要知道，象那什么号称丹王的货色，其实…其实也就是屁罢了
+  bomb: <bomb_playing><bomb_title>
