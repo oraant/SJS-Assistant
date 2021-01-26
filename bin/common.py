@@ -6,7 +6,7 @@ import os
 
 # ------ 语音参数 -------------------------------------------------------------------------
 url = 'https://nls-gateway.cn-shanghai.aliyuncs.com/stream/v1/tts'
-voice = 'siyue'
+voice = 'aiqi' # 之前用的思悦，给Tina用的艾琪
 appkey = 'isoImgAr3zR2V4Lq'
 format = 'mp3'
 

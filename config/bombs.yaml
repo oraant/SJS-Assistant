@@ -12,7 +12,7 @@
   <bomb_title>: [步]
 吃饺子:
   active: true
-  count: 50
+  count: 51
   <bomb_playing>: [吃, 吃点]
   <bomb_title>: [饺子, 热腾腾的饺子, 热饺子, 香喷喷的饺子]
 雪糕:
@@ -27,7 +27,7 @@
   <bomb_title>: [相声, 小说, 段子, 故事]
 玩飞镖:
   active: true
-  count: 39
+  count: 40
   <bomb_playing>: [玩, 投掷, 投, 扔]
   <bomb_title>: 飞镖
 读书:
@@ -39,7 +39,7 @@
   <bomb_playing>: [下载, 下]
   <bomb_title>: 杂志
   active: true
-  count: 33
+  count: 34
 
 # 低频的备选选项：
 

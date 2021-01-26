@@ -52,7 +52,7 @@ ARK:
 知乎:
   <target_title>: [知乎, 知乎, 知乎, 知乎, 知乎, 知乎, 逼乎, 问答社区, 破乎, 小破乎, 贵乎]
   <<: *website
-  count: 16
+  count: 18
 哔哩哔哩:
   <target_title>: [B站, B站, B站, B站, B站, 哔哩哔哩, 小破站, bilibili]
   <<: *website
