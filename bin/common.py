@@ -22,6 +22,7 @@ cur_path = os.path.abspath(os.path.dirname(__file__))
 root_path = cur_path[:cur_path.find(project_name)+len(project_name)]
 
 def file_path(x): return os.path.join(root_path, x)
+count_file = file_path('config\\count.yaml')
 sentences_file = file_path('config\\sentences.yaml')
 targets_file = file_path('config\\targets.yaml')
 bombs_file = file_path('config\\bombs.yaml')
