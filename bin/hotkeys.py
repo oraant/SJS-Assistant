@@ -49,7 +49,7 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
         413: [MOD_ALT, VK_MULTIPLY, None], 414: [MOD_ALT, VK_DIVIDE, None], 415: [MOD_ALT, VK_RETURN, None],
     }
 
-    def mapping(self, mod, key, func):
+    def mapping(self, mod, key, func): # 编辑Mapping变量，指定修饰符、按键、以及热键触发时执行的方法
         mod_num = {'Win': 100, 'Shift': 200, 'Ctrl': 300, 'Alt': 400}
         key_num = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '.': 10, '+': 11,
                    '-': 12, '*': 13, '/': 14, '↵': 15}
@@ -67,6 +67,7 @@ class Hotkey(threading.Thread):  # 通过热键操作某个数值的大小
     # 批量注册热键
     def register(self):
         for id, (modifier, key, func) in self.Mapping.items():
+            if not func: continue # 只注册有方法的热键
             if not user32.RegisterHotKey(None, id, modifier, key):
                 common.log(30, "热键注册失败！ID: %s, MOD: %s, KEY: %s" % (id, modifier, key))
 

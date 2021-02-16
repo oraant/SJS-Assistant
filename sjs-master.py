@@ -31,15 +31,18 @@ def set_count(count): # 直接像配置文件中读取count值
 import threading, time, random
 from win32gui import GetCursorPos
 
+sleep_gap = 10 # 轮询的间隔
+coefficient = 1 # 惩罚的价格，写1就是错1次罚1下，写5就是错1次罚5下
+
 def monitor_config():
     last_position = GetCursorPos()
     while True:
-        time.sleep(10)
+        time.sleep(sleep_gap)
         count = get_count()
         position = GetCursorPos()
 
-        if count <= 0: continue # 设定触发的必要条件
-        if random.random() > 10/3600: continue # 设定触发的概率
+        if count <= 0: continue # 设定触发的必要条件：必须有数值才行
+        if random.random() > (sleep_gap*coefficient)/3600: continue # 设定触发的概率和强度，系数为1时大概1小时吓1次
         if position == last_position: continue
 
         press_key(0) # 执行惩罚
@@ -50,6 +53,25 @@ def run_monitor():
     monitor_thread = threading.Thread(target=monitor_config)
     monitor_thread.setDaemon(True)
     monitor_thread.start()
+
+
+
+# === 注册热键 ===============================================
+
+from bin import hotkeys
+
+def add_count(num):
+    set_count(get_count()+num)
+    winsound.Beep(1000, 300)
+def add_1(): add_count(1*coefficient)
+def add_5(): add_count(5*coefficient)
+def add_x(): add_count(10*coefficient)
+
+hotkeys.register('Ctrl', '-', add_1)
+hotkeys.register('Ctrl', '+', add_5)
+hotkeys.register('Ctrl', '↵', add_x)
+
+hotkeys.listen()
 
 
 
