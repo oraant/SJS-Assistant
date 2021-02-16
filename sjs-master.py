@@ -58,7 +58,7 @@ def run_monitor():
 
 # === 注册热键 ===============================================
 
-from bin import hotkeys
+import keyboard
 
 def add_count(num):
     set_count(get_count()+num)
@@ -67,11 +67,12 @@ def add_1(): add_count(1*coefficient)
 def add_5(): add_count(5*coefficient)
 def add_x(): add_count(10*coefficient)
 
-hotkeys.register('Ctrl', '-', add_1)
-hotkeys.register('Ctrl', '+', add_5)
-hotkeys.register('Ctrl', '↵', add_x)
-
-hotkeys.listen()
+keyboard.add_hotkey('ctrl+shift+alt+1', add_1)
+keyboard.add_hotkey('ctrl+shift+alt+2', add_5)
+keyboard.add_hotkey('ctrl+shift+alt+3', add_x)
+keyboard.add_hotkey('f21', add_1)
+keyboard.add_hotkey('f22', add_5)
+keyboard.add_hotkey('f23', add_x)
 
 
 
