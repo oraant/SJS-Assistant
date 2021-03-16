@@ -1,4 +1,8 @@
-# === 测试功能 ===============================================
+# ■■■ 前置功能 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+
+
+# ━━━ 测试功能 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import winsound
 from win32com.client import Dispatch
@@ -12,7 +16,7 @@ def make_beep(systray): winsound.Beep(1000, 1000)
 
 
 
-# === 读写配置 ===============================================
+# ━━━ 读写配置 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 from ruamel.yaml import YAML; yaml = YAML()
 from bin.common import count_file
@@ -27,7 +31,12 @@ def set_count(count): # 直接像配置文件中读取count值
 
 
 
-# === 监控配置文件，并适时执行惩罚 ===============================================
+# ■■■ 核心功能 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+
+
+# ━━━ 监控配置文件，并适时执行惩罚 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 
 import threading, time, random
 from win32gui import GetCursorPos
@@ -37,7 +46,7 @@ mc_sleep_gap = 5 # 轮询的间隔，为1就是1秒判断1次
 coefficient = 5 # 惩罚的价格，写1就是错1次罚1下，写5就是错1次罚5下
 frequency = 10 # 惩罚的频率，若效率、频率都为1，就表示每小时平均惩罚1下
 
-def monitor_config():
+def monitor_config(): # 监控配置文件，若有值，则以一定概率触发惩罚
     last_position = GetCursorPos()
     while True:
         time.sleep(mc_sleep_gap)
@@ -53,9 +62,12 @@ def monitor_config():
         last_position = position
         set_count(count-1)
 
+def add_count_to_config(num): # 增加惩罚次数，并提醒
+    set_count(get_count()+num*coefficient)
+    winsound.Beep(1000, 300)
 
 
-# === 制作提醒功能 ===============================================
+# ━━━ 自动提醒功能 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 from datetime import datetime as dt, time as t, timedelta as td
 reminder_list = [
@@ -102,7 +114,7 @@ def get_delta_str(timedelta): # 将时间差转化为更加流畅的朗读文本
 mt_sleep_gap = 1 # 监控间隔
 alert_list = [1800, 600, 300, 120, 60, 20, 1] # 还有多少秒时要提醒时
 
-def monitor_time():
+def monitor_time(): # 自动报时功能
     global reminder_temp
     while True:
         time.sleep(mt_sleep_gap)
@@ -124,31 +136,9 @@ def monitor_time():
                 else:
                     win_speak('离%s差%s' % (next_reminder.strftime('%H:%M'), get_delta_str(timedelta)))
 
+# ━━━ 临时计时器功能 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-
-# === 注册热键 ===============================================
-
-import keyboard
-
-# 增加惩罚次数
-def add_count(num):
-    set_count(get_count()+num)
-    winsound.Beep(1000, 300)
-def add_1(): add_count(1*coefficient)
-def add_5(): add_count(5*coefficient)
-def add_x(): add_count(10*coefficient)
-
-keyboard.add_hotkey('ctrl+shift+alt+1', add_1)
-keyboard.add_hotkey('ctrl+shift+alt+2', add_5)
-keyboard.add_hotkey('ctrl+shift+alt+3', add_x)
-keyboard.add_hotkey('f21', add_1)
-keyboard.add_hotkey('f22', add_5)
-keyboard.add_hotkey('f23', add_x)
-
-
-# 调整计时器
-
-def report_next():
+def report_next(): # 报告下一个计时器
     next_reminder = get_reminder()
     speak_content = str(get_count()) + '次。'
 
@@ -157,7 +147,7 @@ def report_next():
 
     win_speak(speak_content)
 
-def modify_temp():
+def modify_temp(): # 增加或延后临时计时器
     global reminder_temp
     if reminder_temp == END_OF_TIME: # 若没设置临时闹钟，则设定为当前时间的五分钟后
         reminder_temp = dt.now() + td(minutes=6)
@@ -165,30 +155,67 @@ def modify_temp():
         reminder_temp += td(minutes=6)
     win_speak('设置为：' + reminder_temp.strftime('%H:%M'))
 
-def clear_temp():
+def clear_temp(): # 清空临时计时器
     global reminder_temp
     reminder_temp = END_OF_TIME
     win_speak('已关闭')
 
-keyboard.add_hotkey('ctrl+shift+alt+8', report_next)
-keyboard.add_hotkey('ctrl+shift+alt+9', modify_temp)
-keyboard.add_hotkey('ctrl+shift+alt+0', clear_temp)
-keyboard.add_hotkey('f18', report_next)
-keyboard.add_hotkey('f19', modify_temp)
-keyboard.add_hotkey('f20', clear_temp)
 
-# === 后台程序 ===============================================
 
+# ■■■ 主程序入口 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+
+
+# ━━━ 注册热键 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+from pynput.mouse import Listener as MouseListener
+from pynput.keyboard import Listener as KeyboardListener
+
+X2ON = False  # 检测X2键是否按下，所有的快捷键只有在X2按下时才生效
+
+def on_mouse_click(x, y, button, pressed): # 通过鼠标中键的状态，开关所有热键功能
+    global X2ON
+    if str(button) != "Button.middle": return
+    if pressed: X2ON = True
+    else: X2ON = False
+mouse_listener = MouseListener(on_click=on_mouse_click)
+mouse_listener.start()
+
+
+def on_key_press(key): # 实际的热键
+    if not X2ON: return
+
+    if str(key) == "Key.esc": clear_temp()
+    elif str(key) == "'`'": report_next()
+    elif str(key) == "Key.tab": modify_temp()
+
+    elif str(key) == "'1'": add_count_to_config(1)
+    elif str(key) == "'2'": add_count_to_config(2)
+    elif str(key) == "'3'": add_count_to_config(3)
+
+keyboard_listener = KeyboardListener(on_press=on_key_press)
+keyboard_listener.start()
+
+
+
+# ━━━ 后台程序 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## def testfunc():
+##     for i in range(100):
+##         print(X2ON)
+##         time.sleep(0.1)
 def run_monitors():
-    t1 = threading.Thread(target=monitor_config)
-    t2 = threading.Thread(target=monitor_time)
-    for t in [t1, t2]:
+    ## targets = [monitor_config, monitor_time, testfunc]
+    targets = [monitor_config, monitor_time]
+
+    for target in targets:
+        t = threading.Thread(target=target)
         t.setDaemon(True)
         t.start()
 
 
 
-# === 任务图标 ===============================================
+# ━━━ 任务图标 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 from infi.systray import SysTrayIcon
 
@@ -202,10 +229,10 @@ systray = SysTrayIcon("assets\icon.ico", "随静姝个人名师", (
     # ("────────────", None, lambda x: x),
 ))
 
-# === 开始运行 ===============================================
 
 
+# ━━━ 开始运行 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# keyboard.add_hotkey('ctrl+j', systray.shutdown) # 调试时用的
 run_monitors()
 systray.start()
+## time.sleep(10) # 调试用，10秒钟后自动退出
