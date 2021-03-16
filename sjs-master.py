@@ -3,7 +3,7 @@
 import winsound
 from win32com.client import Dispatch
 win_speak = Dispatch('SAPI.SPVOICE').Speak  # Windows朗读设备，只能阻塞朗读
-win_speak('') # 最好先调用一下，不然在线程里调用的时候，容易出现问题
+win_speak('随静姝大师开始启动') # 最好先调用一下，不然在线程里调用的时候，容易出现问题。而且还能防止系统哔哔声卡顿
 win_wshshl= Dispatch("WScript.Shell") # 用来发送按键，可以发送组合键
 
 def press_key(systray): win_wshshl.SendKeys('{F13}')
@@ -27,13 +27,15 @@ def set_count(count): # 直接像配置文件中读取count值
 
 
 
-# === 监控文件 ===============================================
+# === 监控配置文件，并适时执行惩罚 ===============================================
 
 import threading, time, random
 from win32gui import GetCursorPos
+from bin.windows import fetch_windows_titles as winTitles
 
-mc_sleep_gap = 10 # 轮询的间隔
-coefficient = 1 # 惩罚的价格，写1就是错1次罚1下，写5就是错1次罚5下
+mc_sleep_gap = 5 # 轮询的间隔，为1就是1秒判断1次
+coefficient = 5 # 惩罚的价格，写1就是错1次罚1下，写5就是错1次罚5下
+frequency = 10 # 惩罚的频率，若效率、频率都为1，就表示每小时平均惩罚1下
 
 def monitor_config():
     last_position = GetCursorPos()
@@ -43,7 +45,8 @@ def monitor_config():
         position = GetCursorPos()
 
         if count <= 0: continue # 设定触发的必要条件：必须有数值才行
-        if random.random() > (mc_sleep_gap * coefficient)/3600: continue # 设定触发的概率和强度，系数为1时大概1小时吓1次
+        if True not in [x in winTitles() for x in ['守望先锋', 'Valheim', 'Nexus', 'bilibili', '知乎']]: continue # 只在犯罪的娱乐时间进行惩罚 # , '', '', '', '', '', '', '', ''
+        if random.random() > (mc_sleep_gap * coefficient * frequency)/3600: continue # 设定触发的概率和强度，系数为1时大概1小时吓1次
         if position == last_position: continue
 
         press_key(0) # 执行惩罚
@@ -52,10 +55,23 @@ def monitor_config():
 
 
 
-# === 提醒功能 ===============================================
+# === 制作提醒功能 ===============================================
 
 from datetime import datetime as dt, time as t, timedelta as td
-reminder_list = ['23:00', '23:59']
+reminder_list = [
+    '00:50', '01:00',
+    '01:50', '02:00',
+    '02:50', '03:00',
+    '03:50', '04:00',
+    '04:50', '05:00',
+    '05:50', '06:00',
+    '06:50', '07:00',
+    '07:50', '08:00',
+    '08:50', '09:00',
+    '13:50', '14:00',
+    '19:50', '20:00',
+    '22:50', '23:00',
+    '23:50', '23:59']
 END_OF_TIME = dt(9999, 1, 1)
 reminder_temp = END_OF_TIME
 
@@ -99,9 +115,9 @@ def monitor_time():
         for alert_second in alert_list: # 在该报警的时间点报警
             if alert_second - 1 < timedelta.seconds < alert_second + mt_sleep_gap: # 计时制可能不精确，导致错过某一秒，故必须选取一段时间，保证此时间段内报警，且只报警一次（朗读所花费的时间，肯定超过1秒了）
                 if alert_second == 600:
-                    win_speak('请注意，时间只剩下10分钟了，请5分钟后及时退出。最起码也要做好随时退出的准备。')
+                    win_speak('请注意，时间只有10分钟咯，请10分钟后赶紧特么退出。否则就会被音波灌耳，最好准备哦。')
                 if alert_second == 300:
-                    win_speak('请注意，时间只剩下5分钟了，请及时退出。最起码也要做好随时退出的准备。')
+                    win_speak('请注意，时间只剩下5分钟了，请及时退出。准备！准备！准备！5')
                 elif alert_second == 1:
                     win_speak('注意！时间到了！请立即矫正自己的行为，否则就要接受音波灌耳的惩罚！警告！警告！十！九！八！七！六！五！四！三！二！一！零！')
                     reminder_temp = END_OF_TIME
@@ -134,8 +150,12 @@ keyboard.add_hotkey('f23', add_x)
 
 def report_next():
     next_reminder = get_reminder()
-    if next_reminder == END_OF_TIME: win_speak('无闹钟')
-    else: win_speak('闹钟在：' + get_reminder().strftime('%H:%M'))
+    speak_content = str(get_count()) + '次。'
+
+    if next_reminder == END_OF_TIME: speak_content += '无闹钟'
+    else: speak_content += get_reminder().strftime('%H:%M')
+
+    win_speak(speak_content)
 
 def modify_temp():
     global reminder_temp
