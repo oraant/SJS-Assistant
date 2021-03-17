@@ -2,16 +2,31 @@
 
 
 
+# ━━━ 朗读功能 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+import pyttsx3, threading, time
+
+def syncSpeak(s):
+    engine = pyttsx3.init()
+    engine.say(s)
+    engine.runAndWait()
+
+def asyncSpeak(s): # todo: 可以加入排队机制。现在不知道是否会有多线程冲突
+    def target(): syncSpeak(s)
+    threading.Thread(target=target).start()
+
+# syncSpeak('随静姝大师开始启动') # 最好先调用一下，不然在线程里调用的时候，容易出现问题。而且还能防止系统哔哔声卡顿
+
+
+
 # ━━━ 测试功能 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import winsound
 from win32com.client import Dispatch
-win_speak = Dispatch('SAPI.SPVOICE').Speak  # Windows朗读设备，只能阻塞朗读
-win_speak('随静姝大师开始启动') # 最好先调用一下，不然在线程里调用的时候，容易出现问题。而且还能防止系统哔哔声卡顿
 win_wshshl= Dispatch("WScript.Shell") # 用来发送按键，可以发送组合键
 
 def press_key(systray): win_wshshl.SendKeys('{F13}')
-def say_nihao(systray): win_speak('你好')
+def say_nihao(systray): syncSpeak('你好')
 def make_beep(systray): winsound.Beep(1000, 1000)
 
 
@@ -38,7 +53,7 @@ def set_count(count): # 直接像配置文件中读取count值
 # ━━━ 监控配置文件，并适时执行惩罚 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-import threading, time, random
+import random
 from win32gui import GetCursorPos
 from bin.windows import fetch_windows_titles as winTitles
 
@@ -63,8 +78,9 @@ def monitor_config(): # 监控配置文件，若有值，则以一定概率触�
         set_count(count-1)
 
 def add_count_to_config(num): # 增加惩罚次数，并提醒
-    set_count(get_count()+num*coefficient)
-    winsound.Beep(1000, 300)
+    add = num*coefficient
+    set_count(get_count()+add)
+    asyncSpeak('加%s至%s' % (add, get_count()))
 
 
 # ━━━ 自动提醒功能 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -127,14 +143,14 @@ def monitor_time(): # 自动报时功能
         for alert_second in alert_list: # 在该报警的时间点报警
             if alert_second - 1 < timedelta.seconds < alert_second + mt_sleep_gap: # 计时制可能不精确，导致错过某一秒，故必须选取一段时间，保证此时间段内报警，且只报警一次（朗读所花费的时间，肯定超过1秒了）
                 if alert_second == 600:
-                    win_speak('请注意，时间只有10分钟咯，请10分钟后赶紧特么退出。否则就会被音波灌耳，最好准备哦。')
+                    syncSpeak('请注意，时间只有10分钟咯，请10分钟后赶紧特么退出。否则就会被音波灌耳，最好准备哦。')
                 if alert_second == 300:
-                    win_speak('请注意，时间只剩下5分钟了，请及时退出。准备！准备！准备！5')
+                    syncSpeak('请注意，时间只剩下5分钟了，请及时退出。准备！准备！准备！5')
                 elif alert_second == 1:
-                    win_speak('注意！时间到了！请立即矫正自己的行为，否则就要接受音波灌耳的惩罚！警告！警告！十！九！八！七！六！五！四！三！二！一！零！')
+                    syncSpeak('注意！时间到了！请立即矫正自己的行为，否则就要接受音波灌耳的惩罚！警告！警告！十！九！八！七！六！五！四！三！二！一！零！')
                     reminder_temp = END_OF_TIME
                 else:
-                    win_speak('离%s差%s' % (next_reminder.strftime('%H:%M'), get_delta_str(timedelta)))
+                    syncSpeak('离%s差%s' % (next_reminder.strftime('%H:%M'), get_delta_str(timedelta)))
 
 # ━━━ 临时计时器功能 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -145,7 +161,7 @@ def report_next(): # 报告下一个计时器
     if next_reminder == END_OF_TIME: speak_content += '无闹钟'
     else: speak_content += get_reminder().strftime('%H:%M')
 
-    win_speak(speak_content)
+    asyncSpeak(speak_content)
 
 def modify_temp(): # 增加或延后临时计时器
     global reminder_temp
@@ -153,12 +169,12 @@ def modify_temp(): # 增加或延后临时计时器
         reminder_temp = dt.now() + td(minutes=6)
     else: # 若已经有了，也往后延五分钟
         reminder_temp += td(minutes=6)
-    win_speak('设置为：' + reminder_temp.strftime('%H:%M'))
+    asyncSpeak('设置为：' + reminder_temp.strftime('%H:%M'))
 
 def clear_temp(): # 清空临时计时器
     global reminder_temp
     reminder_temp = END_OF_TIME
-    win_speak('已关闭')
+    asyncSpeak('已关闭')
 
 
 
@@ -171,41 +187,44 @@ def clear_temp(): # 清空临时计时器
 from pynput.mouse import Listener as MouseListener
 from pynput.keyboard import Listener as KeyboardListener
 
-X2ON = False  # 检测X2键是否按下，所有的快捷键只有在X2按下时才生效
+HotkeyStatus = False  # 检测开关键是否按下，所有的快捷键只有在鼠标中键按下时才生效
 
 def on_mouse_click(x, y, button, pressed): # 通过鼠标中键的状态，开关所有热键功能
-    global X2ON
+    global HotkeyStatus
     if str(button) != "Button.middle": return
-    if pressed: X2ON = True
-    else: X2ON = False
+    if pressed: HotkeyStatus = True
+    else: HotkeyStatus = False
 mouse_listener = MouseListener(on_click=on_mouse_click)
 mouse_listener.start()
 
+KeyMap = {  # 热键列表及含义
+    0x1B: lambda: clear_temp(),  # "Key.esc"
+    0xC0: lambda: report_next(),  # "'`'"
+    0x09: lambda: modify_temp(),  # "Key.tab"
+    0x31: lambda: add_count_to_config(1),  # "'1'"
+    0x32: lambda: add_count_to_config(2),  # "'2'"
+    0x33: lambda: add_count_to_config(3),  # "'3'"
+}
 
-def on_key_press(key): # 实际的热键
-    if not X2ON: return
+def win32_event_filter(msg, data): # 鼠标中键按下时热键才生效，并防止按键继续扩散
+    if not HotkeyStatus:return False # 只有当鼠标中键按下时热键才生效
+    if data.vkCode not in KeyMap:return False # 只有当相关热键按下时热键才生效
+    if msg != 256: return False # 只有当键是按下时才生效（参考https://github.com/moses-palmer/pynput/issues/170#issuecomment-602743287）
 
-    if str(key) == "Key.esc": clear_temp()
-    elif str(key) == "'`'": report_next()
-    elif str(key) == "Key.tab": modify_temp()
+    KeyMap[data.vkCode]() # 手动触发热键
+    keyboard_listener.suppress_event() # 当相关热键按下时，阻止其继续传播
 
-    elif str(key) == "'1'": add_count_to_config(1)
-    elif str(key) == "'2'": add_count_to_config(2)
-    elif str(key) == "'3'": add_count_to_config(3)
-
-keyboard_listener = KeyboardListener(on_press=on_key_press)
+keyboard_listener = KeyboardListener(win32_event_filter=win32_event_filter)
 keyboard_listener.start()
-
-
 
 # ━━━ 后台程序 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## def testfunc():
-##     for i in range(100):
-##         print(X2ON)
-##         time.sleep(0.1)
+# def testfunc(): ##
+#     for i in range(100):
+#         print(HotkeyStatus)
+#         time.sleep(0.1)
 def run_monitors():
-    ## targets = [monitor_config, monitor_time, testfunc]
+    # targets = [monitor_config, monitor_time, testfunc] ##
     targets = [monitor_config, monitor_time]
 
     for target in targets:
@@ -235,4 +254,4 @@ systray = SysTrayIcon("assets\icon.ico", "随静姝个人名师", (
 
 run_monitors()
 systray.start()
-## time.sleep(10) # 调试用，10秒钟后自动退出
+# time.sleep(15) ## 调试用，10秒钟后自动退出
