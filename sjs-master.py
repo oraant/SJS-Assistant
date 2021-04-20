@@ -63,7 +63,21 @@ from bin.windows import fetch_windows_titles as winTitles
 
 mc_sleep_gap = 5 # 轮询的间隔，为1就是1秒判断1次
 coefficient = 100 # 惩罚的价格，写1就是错1次罚1下，写5就是错1次罚5下
-frequency = 50 # 惩罚的频率，若效率、频率都为1，就表示每小时平均惩罚1下
+frequency = 5 # 惩罚的频率，若效率、频率都为1，就表示每小时平均惩罚1下
+
+black_list = [ # , '', '', '', '', '', '', '', '',
+    'Steam', '守望先锋', 'Valheim', 'Conan', 'Titan', '泰坦',
+    'Nexus', 'bilibili', '知乎', 'youtube',
+	'2048', '核基地', '1024', 'zod', 'jable', 'M系', 'xvideos', #'', '', '',
+	'小说', 'Gif', #'', '', '', '', '', '',
+]
+
+punish_range = [ # 执行惩罚的时间范围，包含工作中间的休息时间
+    ['00:00', '07:00'],
+    ['09:00', '10:00'], ['10:11', '11:00'], ['11:11', '12:00'],
+    ['14:00', '15:00'], ['15:11', '16:00'], ['16:11', '17:00'], ['17:11', '18:00'],
+    ['20:00', '21:00'], ['21:11', '22:00']
+]
 
 def monitor_config(): # 监控配置文件，若有值，则以一定概率触发惩罚
     last_position = GetCursorPos()
@@ -72,15 +86,17 @@ def monitor_config(): # 监控配置文件，若有值，则以一定概率触�
         count = get_count()
         position = GetCursorPos()
 
-        if not in_punish_range(): continue
-        if count <= 0: continue # 设定触发的必要条件：必须有数值才行
-        if True not in [x in winTitles() for x in ['守望先锋', 'Valheim', 'Nexus', 'bilibili', '知乎', 'Conan']]: continue # 只在犯罪的娱乐时间进行惩罚 # , '', '', '', '', '', '', '', ''
+        if True not in [x in winTitles().lower() for x in black_list]: continue # 如果没在玩，则无需惩罚
         if random.random() > (mc_sleep_gap * coefficient * frequency)/3600: continue # 设定触发的概率和强度，系数为1时大概1小时吓1次
-        if position == last_position: continue
+        if position == last_position: continue # 判断用户是否正在用，否则空罚就白减数了
 
-        press_key(0) # 执行惩罚
+        if in_punish_range(): # 在学习阶段，发现错误直接惩罚
+            press_key(0)
+        elif count > 0: # 在娱乐阶段，有次数也要罚
+            set_count(count-1)
+            press_key(0)
+
         last_position = position
-        set_count(count-1)
 
 def add_count_to_config(num): # 增加惩罚次数，并提醒
     add = num*coefficient
@@ -88,7 +104,6 @@ def add_count_to_config(num): # 增加惩罚次数，并提醒
     asyncSpeak('加%s至%s' % (add, get_count()))
 
 def in_punish_range(): # 检查是否处在惩罚时间段内
-    punish_range = [ ['00:00', '07:00'], ['09:00', '12:00'], ['14:00', '18:00'], ['20:00', '22:00'] ] # 执行惩罚的时间范围
     for time_range in punish_range:
         if t.fromisoformat(time_range[0]) < dt.now().time() < t.fromisoformat(time_range[1]):
             return True
@@ -98,19 +113,12 @@ def in_punish_range(): # 检查是否处在惩罚时间段内
 
 from datetime import datetime as dt, time as t, timedelta as td
 reminder_list = [
-    '00:50', '01:00',
-    '01:50', '02:00',
-    '02:50', '03:00',
-    '03:50', '04:00',
-    '04:50', '05:00',
-    '05:50', '06:00',
-    '06:50', '07:00',
-    '07:50', '08:00',
-    '08:50', '09:00',
-    '13:50', '14:00',
-    '19:50', '20:00',
-    '22:50', '23:00',
-    '23:50', '23:59']
+    '00:50', '01:00',    '01:50', '02:00',    '02:50', '03:00',    '03:50', '04:00',
+	'04:50', '05:00',    '05:50', '06:00',    '06:50', '07:00',    '07:50', '08:00',
+	
+    '08:50', '09:00',    '13:50', '14:00',    '19:50', '20:00',
+    '22:50', '23:00',    '23:50', '23:59'
+	]
 END_OF_TIME = dt(9999, 1, 1)
 reminder_temp = END_OF_TIME
 
